@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#0a0a0f"/>
+<title>Fasting Companion</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=JetBrains+Mono:wght@300;400&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: #0a0a0f;
+    min-height: 100vh;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    color: #e8e0d0;
+    overflow-x: hidden;
+  }
+
+  .bg-glow {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse at 15% 15%, #1a120540 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 85%, #0d1a1240 0%, transparent 55%);
+  }
+
+  .app {
+    position: relative; z-index: 1;
+    max-width: 460px; margin: 0 auto;
+    padding: 24px 18px 80px;
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 100;
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+  }
+  .modal {
+    background: #0e0e0a; border: 1px solid #2e2410;
+    border-radius: 18px; padding: 36px 28px; max-width: 380px; width: 100%;
+    text-align: center;
+  }
+  .modal-icon { font-size: 52px; margin-bottom: 14px; }
+  .modal h2 { color: #e8c97e; font-size: 22px; font-weight: 400; margin-bottom: 10px; }
+  .modal p { color: #9a8860; font-size: 14px; line-height: 1.7; margin-bottom: 22px; }
+  .modal-list { text-align: left; margin-bottom: 20px; }
+  .modal-list p { color: #7aaa7a; font-size: 13px; margin: 6px 0; line-height: 1.5; }
+  .modal-list p.dim { color: #a09070; }
+  .modal-list p.bold { color: #c8a060; font-size: 14px; font-weight: 600; margin-top: 16px; }
+  .divider { border: none; border-top: 1px solid #2a2010; margin: 18px 0; }
+
+  /* BUTTONS */
+  .btn {
+    width: 100%; padding: 13px; border-radius: 11px;
+    font-family: 'Cormorant Garamond', serif; font-size: 15px;
+    cursor: pointer; border: none; transition: opacity 0.15s;
+  }
+  .btn:active { opacity: 0.8; }
+  .btn-gold {
+    background: linear-gradient(135deg, #c9a84c, #8b6914);
+    color: #0a0a0f; font-weight: 600;
+  }
+  .btn-green {
+    background: linear-gradient(135deg, #1a3a1a, #2a5a2a);
+    border: 1px solid #3a7a3a; color: #7ed896;
+    animation: pulse 2s infinite;
+  }
+  .btn-purple {
+    background: linear-gradient(135deg, #1a1a2e, #2a2a4e);
+    border: 1px solid #3a3a6e; color: #a090d0;
+  }
+  .btn-ghost {
+    background: transparent; border: 1px solid #2e2410;
+    color: #8a7040; font-size: 13px; margin-bottom: 10px;
+  }
+  .btn-outline-green {
+    background: #0d1a0d; border: 1px solid #2a4a2a;
+    color: #7ed896; font-size: 13px;
+  }
+  .btn-row { display: flex; gap: 10px; }
+  .btn-row .btn { flex: 1; }
+
+  /* HEADER */
+  .header { text-align: center; margin-bottom: 24px; }
+  .header-label {
+    font-size: 10px; letter-spacing: 3px; color: #3a2e14;
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .header-day { font-size: 34px; font-weight: 300; color: #e8c97e; letter-spacing: -0.5px; }
+  .header-day span { color: #2e2410; font-size: 20px; }
+
+  /* PROGRESS DOTS */
+  .dots { display: flex; gap: 5px; margin-bottom: 26px; flex-wrap: wrap; justify-content: center; }
+  .dot {
+    width: 11px; height: 11px; border-radius: 50%; cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .dot:active { transform: scale(1.3); }
+
+  /* CARDS */
+  .card {
+    border-radius: 16px; padding: 22px; margin-bottom: 14px;
+    border: 1px solid #1e1a10;
+  }
+  .card-fast { background: linear-gradient(135deg, #0d0d1a 0%, #111108 100%); }
+  .card-food { background: #0d0d08; }
+  .card-insight { background: #080d08; border-color: #152015; }
+  .card-remind { background: #0d080d; border-color: #1e1018; }
+  .card-label {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;
+  }
+  .card-label.gold { color: #5a4a2a; }
+  .card-label.green { color: #2a4a2a; }
+  .card-label.purple { color: #4a2a4a; }
+
+  /* FAST HEADER ROW */
+  .fast-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+  .fast-hours { font-size: 40px; color: #e8c97e; line-height: 1; }
+  .fast-hours span { font-size: 18px; color: #8a7040; }
+  .fast-start-label { font-size: 10px; color: #5a4a2a; margin-bottom: 2px; }
+  .fast-start-val { color: #a09070; font-size: 17px; text-align: right; }
+
+  /* PROGRESS BAR */
+  .progress-wrap { margin-bottom: 16px; }
+  .progress-track { background: #1a1510; border-radius: 99px; height: 6px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 99px; transition: width 1s linear; }
+  .progress-fill.active { background: linear-gradient(90deg, #8b6914, #e8c97e); }
+  .progress-fill.done { background: #7ed896; }
+  .progress-labels { display: flex; justify-content: space-between; margin-top: 7px; font-size: 12px; color: #6a5a30; }
+  .progress-labels span { color: #c9a84c; }
+  .progress-labels .done-label { color: #7ed896; }
+
+  /* TIMER */
+  .timer-box {
+    text-align: center; padding: 18px;
+    background: #08080f; border-radius: 12px; margin-bottom: 16px;
+  }
+  .timer-title { font-size: 10px; letter-spacing: 2px; color: #3a3060; text-transform: uppercase; margin-bottom: 6px; }
+  .timer-val {
+    font-size: 46px; color: #a090d0;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 2px; line-height: 1;
+  }
+  .timer-sub { font-size: 10px; color: #3a3060; margin-top: 5px; }
+
+  /* FOOD */
+  .food-text { color: #c8a870; font-size: 14px; line-height: 1.65; }
+
+  /* INSIGHT */
+  .insight-text { color: #7aaa7a; font-size: 14px; line-height: 1.75; }
+  .insight-dots { display: flex; gap: 5px; margin-top: 14px; }
+  .insight-dot {
+    width: 6px; height: 6px; border-radius: 50%; cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  /* REMIND */
+  .remind-row { display: flex; justify-content: space-between; align-items: center; }
+  .remind-time { color: #c870c8; font-size: 24px; }
+  .remind-set { color: #5a8a5a; font-size: 12px; }
+  .btn-notif {
+    background: transparent; border: 1px solid #3a1a3a;
+    border-radius: 8px; color: #8a508a; font-size: 12px;
+    padding: 7px 12px; cursor: pointer; font-family: inherit;
+  }
+
+  /* FOOTER */
+  .footer { text-align: center; margin-top: 8px; font-size: 12px; color: #2a2010; }
+
+  /* RESET BTN */
+  .reset-btn {
+    position: fixed; bottom: 20px; right: 20px; z-index: 50;
+    background: #1a1510; border: 1px solid #2a2010;
+    color: #3a3020; font-size: 11px; padding: 6px 10px;
+    border-radius: 8px; cursor: pointer; font-family: inherit;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(126, 216, 150, 0.25); }
+    50% { opacity: 0.9; box-shadow: 0 0 0 10px rgba(126, 216, 150, 0); }
+  }
+
+  .hidden { display: none !important; }
+  .extended-tag { color: #7ab8c8; font-size: 12px; margin-top: 4px; }
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+<div class="app" id="app">
+  <div id="loading" style="text-align:center;padding-top:40vh;color:#e8c97e;font-size:18px;">Loading your program…</div>
+</div>
+
+<!-- RESET -->
+<button class="reset-btn" onclick="confirmReset()">⚙ Reset</button>
+
+<script>
+// ─── DATA ─────────────────────────────────────────────────────────────
+const SCHEDULE = [
+  {d:1, h:17, s:18, diet:"60% fat focus: avocado, cheese, bone broth, leafy veggies. Max 75g carbs.", special:null},
+  {d:2, h:17, s:18, diet:"60% fat focus: avocado, cheese, bone broth, leafy veggies. Max 75g carbs.", special:null},
+  {d:3, h:17, s:18, diet:"60% fat focus: avocado, cheese, bone broth, leafy veggies. Max 75g carbs.", special:null},
+  {d:4, h:17, s:18, diet:"60% fat focus: avocado, cheese, bone broth, leafy veggies. Max 75g carbs.", special:null},
+  {d:5, h:17, s:20, diet:"60% fat focus: avocado, cheese, bone broth, leafy veggies. Max 75g carbs.", special:null},
+  {d:6, h:36, s:20, diet:"Extended fast — water, electrolytes, minerals only.", special:"extended"},
+  {d:7, h:36, s:null, diet:"Full water fast. Minerals permitted. Fat bomb allowed.", special:"waterfast"},
+  {d:8, h:15, s:18, diet:"Break fast gently at 8–10am: bone broth, soft eggs, avocado. Then some carbs — sweet potato, fruit, rice.", special:"breakfast"},
+  {d:9, h:15, s:18, diet:"60% fat focus: avocado, cheese, bone broth, leafy veggies. Max 75g carbs.", special:null},
+  {d:10,h:15, s:18, diet:"60% fat focus: avocado, cheese, bone broth, leafy veggies. Max 75g carbs.", special:null},
+  {d:11,h:13, s:18, diet:"60% fat focus: avocado, cheese, bone broth, leafy veggies. Max 75g carbs.", special:null},
+  {d:12,h:13, s:18, diet:"60% fat focus: avocado, cheese, bone broth, leafy veggies. Max 75g carbs.", special:null},
+  {d:13,h:13, s:18, diet:"60% fat focus: avocado, cheese, bone broth, leafy veggies. Max 75g carbs.", special:null},
+  {d:14,h:13, s:18, diet:"60% fat focus: avocado, cheese, bone broth, leafy veggies. Max 75g carbs.", special:null},
+  {d:15,h:13, s:18, diet:"60% fat focus: avocado, cheese, bone broth, leafy veggies. Max 75g carbs.", special:null},
+  {d:16,h:17, s:18, diet:"60% fat focus: avocado, cheese, bone broth, leafy veggies. Max 75g carbs.", special:null},
+  {d:17,h:17, s:18, diet:"60% fat focus: avocado, cheese, bone broth, leafy veggies. Max 75g carbs.", special:null},
+  {d:18,h:13, s:18, diet:"60% fat focus: avocado, cheese, bone broth, leafy veggies. Max 75g carbs.", special:null},
+  {d:19,h:13, s:18, diet:"60% fat focus: avocado, cheese, bone broth, leafy veggies. Max 75g carbs.", special:null},
+  {d:20,h:13, s:18, diet:"60% fat focus: avocado, cheese, bone broth, leafy veggies. Max 75g carbs.", special:null},
+  {d:21,h:13, s:18, diet:"60% fat focus: avocado, cheese, bone broth, leafy veggies. Max 75g carbs.", special:null},
+  {d:22,h:13, s:18, diet:"60% fat focus: avocado, cheese, bone broth, leafy veggies. Max 75g carbs.", special:null},
+  {d:23,h:13, s:18, diet:"60% fat focus: avocado, cheese, bone broth, leafy veggies. Max 75g carbs.", special:null},
+  {d:24,h:13, s:18, diet:"60% fat focus: avocado, cheese, bone broth, leafy veggies. Max 75g carbs.", special:null},
+];
+
+const FASTING_INSIGHTS = [
+  "⚡ Hours 12–16: Glycogen fully depleted. Your liver is now synthesizing ketones — clean, efficient fuel for your brain.",
+  "🔥 Fat oxidation is accelerating right now. Stored body fat is your primary energy source.",
+  "🧠 BDNF is rising — brain-derived neurotrophic factor is the fertilizer of neuroplasticity. Your brain is becoming more adaptive.",
+  "🛡️ Autophagy is active — your cells are dismantling and recycling damaged proteins. This is biological anti-aging.",
+  "💪 Growth hormone surges during extended fasts, actively protecting muscle tissue while accelerating fat burn.",
+  "🌿 Systemic inflammation is dropping. Your immune system is undergoing a powerful, natural reset.",
+  "⚖️ Insulin is at its floor. Every cell in your body is regaining sensitivity — deep metabolic healing.",
+  "🔬 Your mitochondria are becoming more efficient. Fasting signals them to produce more energy with less waste.",
+];
+
+const KETO_INSIGHTS = [
+  "🧠 Ketones yield ~25% more ATP per unit than glucose — your brain is running on its preferred premium fuel.",
+  "💡 Beta-hydroxybutyrate directly crosses the blood-brain barrier and reduces neuroinflammation at the source.",
+  "🎯 Stable ketone energy means no glucose spikes, no crashes — just clean, sustained mental clarity.",
+  "🛡️ Ketones increase GABA production in the brain — your natural calming neurotransmitter. Less anxiety, deeper rest.",
+  "⚡ Your hippocampus thrives on ketones. This way of eating is literally nourishing your memory center.",
+  "🌱 Ketosis activates the AMPK longevity pathway — the same cellular switch triggered by fasting and exercise.",
+  "💪 MCT fats convert to ketones within 30 minutes — add coconut oil or MCT oil for instant brain fuel.",
+  "🔥 Avocado fat, cheese fat, broth minerals — every bite you make today feeds your neurons what they prefer over sugar.",
+];
+
+const BREAK_FAST_FOODS = [
+  "🥣 Begin with bone broth — it gently reactivates your digestive enzymes without shock.",
+  "🥚 Soft-boiled or scrambled eggs: easy protein, zero fiber overload on a resting gut.",
+  "🥑 A few slices of avocado — healthy fats that ease the metabolic transition back to eating.",
+  "🫐 Small portion of berries — low glycemic, antioxidant-rich, gentle re-entry.",
+  "❌ Avoid for first hour: raw vegetables, heavy red meat, processed carbs — let your gut wake up slowly.",
+];
+
+const CONGRATS = [
+  "✅ Deep autophagy triggered — cells cleaned house and recycled damaged proteins",
+  "✅ Significant fat oxidation — stored body fat was your primary fuel source",
+  "✅ Insulin sensitivity reset — your cells are now primed to respond more efficiently",
+  "✅ Gut microbiome optimization — beneficial bacteria populations have rebalanced",
+  "✅ Inflammatory markers dropped — your immune system received a natural reboot",
+  "✅ Growth hormone elevated — muscle was protected while fat burned",
+];
+
+// ─── STATE ────────────────────────────────────────────────────────────
+const KEY = 'fasting_companion_v2';
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return null;
+}
+
+function saveState(state) {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(state));
+  } catch(e) {}
+}
+
+let state = loadState() || {
+  setup: false,
+  currentDay: 1,
+  fastStartTime: null,  // ISO string
+  fastEnded: false,
+  insight: 0,
+  notifScheduled: {},
+};
+
+// Always recalculate insight based on current hour so it's consistent
+state.insight = Math.floor(Date.now() / (1000 * 60 * 60 * 3)) % 8;
+
+// ─── HELPERS ──────────────────────────────────────────────────────────
+function fmtTimer(ms) {
+  if (ms <= 0) return "00:00:00";
+  const s = Math.floor(ms/1000);
+  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sec = s%60;
+  return `${pad(h)}:${pad(m)}:${pad(sec)}`;
+}
+function fmtElapsed(ms) {
+  const tm = Math.floor(ms/60000);
+  const h = Math.floor(tm/60), m = tm%60;
+  if (!h) return `${m}m`;
+  if (!m) return `${h}h`;
+  return `${h}h ${m}m`;
+}
+function pad(n) { return String(n).padStart(2,'0'); }
+
+function getDayData() {
+  return SCHEDULE[state.currentDay - 1] || SCHEDULE[SCHEDULE.length - 1];
+}
+
+function getFastMs() {
+  if (!state.fastStartTime) return {};
+  const day = getDayData();
+  const startMs = new Date(state.fastStartTime).getTime();
+  const durationMs = day.h * 60 * 60 * 1000;
+  const endMs = startMs + durationMs;
+  const now = Date.now();
+  const elapsed = Math.max(0, now - startMs);
+  const remaining = Math.max(0, endMs - now);
+  const pct = Math.min(100, elapsed / durationMs * 100);
+  const isFasting = now >= startMs && now < endMs && !state.fastEnded;
+  const windowOver = now >= endMs && !state.fastEnded;
+  return { startMs, endMs, durationMs, elapsed, remaining, pct, isFasting, windowOver };
+}
+
+// ─── NOTIFICATIONS ────────────────────────────────────────────────────
+function scheduleNotifs() {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  const day = getDayData();
+  const dayKey = `d${state.currentDay}`;
+  if (state.notifScheduled[dayKey]) return;
+  state.notifScheduled[dayKey] = true;
+  saveState(state);
+
+  // Fast start reminder
+  if (day.s !== null) {
+    const target = new Date();
+    target.setHours(day.s, 0, 0, 0);
+    if (target <= new Date()) target.setDate(target.getDate() + 1);
+    const delay = target - Date.now();
+    if (delay < 24*60*60*1000) {
+      setTimeout(() => {
+        new Notification('⏱️ Time to start your fast!', {
+          body: `Day ${state.currentDay}: Begin your ${day.h}h fasting window. You've got this!`,
+          icon: ''
+        });
+      }, delay);
+    }
+  }
+
+  // 4 insight reminders
+  const times = [9, 12, 15, 19];
+  const fastInsights = [FASTING_INSIGHTS[0], FASTING_INSIGHTS[2], FASTING_INSIGHTS[3], FASTING_INSIGHTS[6]];
+  const ketoInsights = [KETO_INSIGHTS[0], KETO_INSIGHTS[2], KETO_INSIGHTS[4], KETO_INSIGHTS[7]];
+  times.forEach((hour, i) => {
+    const target = new Date();
+    target.setHours(hour, 0, 0, 0);
+    const delay = target - Date.now();
+    if (delay > 0 && delay < 24*60*60*1000) {
+      setTimeout(() => {
+        const { isFasting } = getFastMs();
+        const pool = isFasting ? fastInsights : ketoInsights;
+        new Notification('🧬 Body Update', { body: pool[i] });
+      }, delay);
+    }
+  });
+}
+
+async function requestNotifs() {
+  if (!('Notification' in window)) return alert('Notifications not supported in this browser.');
+  const perm = await Notification.requestPermission();
+  if (perm === 'granted') { scheduleNotifs(); render(); }
+  else render();
+}
+
+// ─── ACTIONS ──────────────────────────────────────────────────────────
+function startProgram() {
+  state.setup = true;
+  state.currentDay = 1;
+  state.fastStartTime = null;
+  state.fastEnded = false;
+  saveState(state);
+  scheduleNotifs();
+  render();
+}
+
+function startFast() {
+  state.fastStartTime = new Date().toISOString();
+  state.fastEnded = false;
+  saveState(state);
+  render();
+}
+
+function endFast() {
+  state.fastEnded = true;
+  saveState(state);
+  showCongrats();
+}
+
+function nextDay() {
+  if (state.currentDay < SCHEDULE.length) {
+    state.currentDay++;
+    state.fastStartTime = null;
+    state.fastEnded = false;
+    saveState(state);
+    scheduleNotifs();
+  }
+  render();
+}
+
+function cycleInsight(i) {
+  state.insight = i;
+  saveState(state);
+  renderInsightCard();
+}
+
+function confirmReset() {
+  if (confirm('Reset all progress? This cannot be undone.')) {
+    localStorage.removeItem(KEY);
+    location.reload();
+  }
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────
+function render() {
+  const app = document.getElementById('app');
+  const day = getDayData();
+  const { isFasting, windowOver, elapsed, remaining, pct } = state.fastStartTime ? getFastMs() : {};
+  const total = SCHEDULE.length;
+  const notifGranted = 'Notification' in window && Notification.permission === 'granted';
+  const isWater = day.special === 'waterfast' || day.special === 'extended';
+  const insight = state.insight % 8;
+  const insightText = (isFasting || (state.fastEnded && state.fastStartTime)) ? FASTING_INSIGHTS[insight] : KETO_INSIGHTS[insight];
+
+  let html = '';
+
+  // SETUP MODAL
+  if (!state.setup) {
+    html += `
+    <div class="modal-overlay">
+      <div class="modal">
+        <div class="modal-icon">🌙</div>
+        <h2>Begin Your 24-Day Journey</h2>
+        <p>Your fasting companion tracks every window, monitors your progress in real time, and guides you with the science of what's happening inside your body — day by day.</p>
+        ${!notifGranted ? `<button class="btn btn-ghost" onclick="requestNotifs()">🔔 Enable push notifications</button>` : `<p style="color:#5a8a5a;font-size:13px;margin-bottom:14px;">🔔 Notifications enabled</p>`}
+        <button class="btn btn-gold" onclick="startProgram()">Start Program Today →</button>
+      </div>
+    </div>`;
+  }
+
+  // CONGRATS MODAL (via showCongrats flag)
+  if (window._showCongrats) {
+    html += `
+    <div class="modal-overlay" onclick="hideCongrats()" style="overflow-y:auto;align-items:flex-start;padding:40px 24px">
+      <div class="modal" onclick="event.stopPropagation()">
+        <div class="modal-icon">🎉</div>
+        <h2 style="color:#7ed896">Fast Complete!</h2>
+        <p style="color:#6aaf78">${day.h} hours of deep metabolic work — here's what you just achieved:</p>
+        <div class="modal-list">
+          ${CONGRATS.map(c => `<p>${c}</p>`).join('')}
+        </div>
+        <hr class="divider"/>
+        <div class="modal-list">
+          <p class="bold">🍽️ Break your fast with:</p>
+          ${BREAK_FAST_FOODS.map(f => `<p class="dim">${f}</p>`).join('')}
+        </div>
+        <div class="btn-row" style="margin-top:20px">
+          <button class="btn btn-outline-green" onclick="hideCongrats()">Close</button>
+          ${state.currentDay < total ? `<button class="btn btn-gold" onclick="hideCongrats();nextDay()">Day ${state.currentDay+1} →</button>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // HEADER
+  html += `
+  <div class="header">
+    <div class="header-label">Your Fasting Journey</div>
+    <div class="header-day">Day ${state.currentDay} <span>of ${total}</span></div>
+  </div>`;
+
+  // DOTS
+  html += `<div class="dots">`;
+  for (let i = 0; i < total; i++) {
+    const past = i < state.currentDay - 1;
+    const active = i === state.currentDay - 1;
+    const bg = past ? '#c9a84c' : active ? '#e8c97e' : '#1e1a10';
+    const border = active ? '2px solid #e8c97e' : '1px solid #2a2010';
+    const shadow = active ? '0 0 8px #e8c97e50' : 'none';
+    html += `<div class="dot" style="background:${bg};border:${border};box-shadow:${shadow}"></div>`;
+  }
+  html += `</div>`;
+
+  // FAST CARD
+  html += `<div class="card card-fast">`;
+  html += `<div class="fast-header">
+    <div>
+      <div class="card-label gold">Today's Fast</div>
+      <div class="fast-hours">${day.h}<span>h</span></div>
+    </div>
+    <div>
+      ${day.s !== null ? `<div class="fast-start-label">Starts</div><div class="fast-start-val">${day.s}:00</div>` : ''}
+      ${isWater ? `<div class="extended-tag">Extended fast</div>` : ''}
+    </div>
+  </div>`;
+
+  // PROGRESS BAR
+  if (state.fastStartTime) {
+    const pctVal = pct || 0;
+    html += `<div class="progress-wrap">
+      <div class="progress-track">
+        <div class="progress-fill ${(windowOver || state.fastEnded) ? 'done' : 'active'}" style="width:${pctVal}%"></div>
+      </div>
+      <div class="progress-labels">
+        <div>Elapsed: <span>${fmtElapsed(elapsed||0)}</span></div>
+        ${(windowOver || state.fastEnded)
+          ? `<div class="done-label">✓ Window complete</div>`
+          : `<div>Remaining: <span>${fmtTimer(remaining||0)}</span></div>`}
+      </div>
+    </div>`;
+  }
+
+  // TIMER
+  if (isFasting) {
+    html += `<div class="timer-box">
+      <div class="timer-title">Fasting</div>
+      <div class="timer-val" id="timer-display">${fmtTimer(elapsed||0)}</div>
+      <div class="timer-sub">elapsed</div>
+    </div>`;
+  }
+
+  // ACTION BUTTONS
+  if (!state.fastStartTime && !state.fastEnded) {
+    html += `<button class="btn btn-purple" onclick="startFast()">🌙 Start Fast Now</button>`;
+  } else if (windowOver) {
+    html += `<button class="btn btn-green" onclick="endFast()">✅ Register End of Fast</button>`;
+  } else if (state.fastEnded) {
+    html += `<div class="btn-row">
+      <button class="btn btn-outline-green" onclick="showCongrats()">🎉 View Benefits</button>
+      ${state.currentDay < total ? `<button class="btn btn-gold" onclick="nextDay()">Day ${state.currentDay+1} →</button>` : '<div style="flex:1;text-align:center;color:#e8c97e;font-size:13px;display:flex;align-items:center;justify-content:center">🏆 Journey complete!</div>'}
+    </div>`;
+  }
+
+  html += `</div>`; // end fast card
+
+  // FOOD CARD
+  html += `<div class="card card-food">
+    <div class="card-label gold">Today's Nutrition Plan</div>
+    <div class="food-text">${day.diet}</div>
+  </div>`;
+
+  // INSIGHT CARD
+  html += `<div class="card card-insight" id="insight-card">
+    <div class="card-label green">${(isFasting || state.fastEnded) ? "What's Happening in Your Body" : "Ketosis & Your Brain"}</div>
+    <div class="insight-text" id="insight-text">${insightText}</div>
+    <div class="insight-dots">
+      ${[0,1,2,3,4,5,6,7].map(i => `<div class="insight-dot" style="background:${insight===i?'#7aaa7a':'#1a2a1a'}" onclick="cycleInsight(${i})"></div>`).join('')}
+    </div>
+  </div>`;
+
+  // REMIND CARD
+  if (day.s !== null) {
+    html += `<div class="card card-remind">
+      <div class="remind-row">
+        <div>
+          <div class="card-label purple">Fast Begins</div>
+          <div class="remind-time">${day.s}:00</div>
+        </div>
+        <div>
+          ${notifGranted
+            ? `<div class="remind-set">🔔 Reminder set</div>`
+            : `<button class="btn-notif" onclick="requestNotifs()">Enable reminders</button>`}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // FOOTER
+  html += `<div class="footer">${total - state.currentDay} days remaining in program</div>`;
+
+  app.innerHTML = html;
+
+  // Start live ticker if fasting
+  if (isFasting) startTicker();
+  else if (windowOver) startWindowOverTicker();
+}
+
+// ─── LIVE TICKER ──────────────────────────────────────────────────────
+let tickerInterval = null;
+
+function startTicker() {
+  clearInterval(tickerInterval);
+  tickerInterval = setInterval(() => {
+    const { isFasting, windowOver, elapsed, remaining, pct } = getFastMs();
+
+    const timerEl = document.getElementById('timer-display');
+    if (timerEl) timerEl.textContent = fmtTimer(elapsed);
+
+    // Check if window just ended
+    if (windowOver || !isFasting) {
+      clearInterval(tickerInterval);
+      render();
+    }
+  }, 1000);
+}
+
+function startWindowOverTicker() {
+  // Just poll every 5s to ensure state stays correct
+  clearInterval(tickerInterval);
+  tickerInterval = setInterval(() => {
+    const { windowOver } = getFastMs();
+    if (!windowOver) render(); // fast ended registration
+  }, 5000);
+}
+
+// ─── CONGRATS ─────────────────────────────────────────────────────────
+window._showCongrats = false;
+
+function showCongrats() {
+  window._showCongrats = true;
+  render();
+}
+
+function hideCongrats() {
+  window._showCongrats = false;
+  render();
+}
+
+function renderInsightCard() {
+  // Lightweight re-render of just insight section
+  const insight = state.insight % 8;
+  const { isFasting } = state.fastStartTime ? getFastMs() : {};
+  const insightText = (isFasting || state.fastEnded) ? FASTING_INSIGHTS[insight] : KETO_INSIGHTS[insight];
+  const el = document.getElementById('insight-text');
+  if (el) el.textContent = insightText;
+  document.querySelectorAll('.insight-dot').forEach((d, i) => {
+    d.style.background = i === insight ? '#7aaa7a' : '#1a2a1a';
+  });
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  render();
+
+  // Schedule notifs if already granted
+  if ('Notification' in window && Notification.permission === 'granted') {
+    scheduleNotifs();
+  }
+
+  // Visibility change — re-render when tab becomes visible again
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      clearInterval(tickerInterval);
+      render();
+    }
+  });
+});
+</script>
+</body>
+</html>
