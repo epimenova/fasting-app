@@ -1,0 +1,1854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#0a0a0f"/>
+<title>Fasting Companion</title>
+<!-- ═══════════════════════════════════════════════
+     ADSENSE PLACEHOLDER
+     Replace the line below with your real AdSense
+     <script> tag from Google AdSense dashboard.
+     Also replace data-ad-client and data-ad-slot
+     in the .ad-unit divs throughout the page.
+════════════════════════════════════════════════ -->
+<!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@300;400&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  background:#0a0a0f;min-height:100vh;
+  font-family:'Cormorant Garamond',Georgia,serif;
+  color:#e8e0d0;overflow-x:hidden;
+}
+.bg-glow{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 15% 15%,#1a120540 0%,transparent 55%),
+    radial-gradient(ellipse at 85% 85%,#0d1a1240 0%,transparent 55%);
+}
+.app{position:relative;z-index:1;max-width:460px;margin:0 auto;padding:20px 18px 100px}
+
+/* ── ONBOARDING SCREENS ── */
+.screen{display:none;animation:fadeIn 0.35s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+.onboard{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:32px 24px;
+  text-align:center;
+}
+.onboard-icon{font-size:60px;margin-bottom:20px;line-height:1}
+.onboard h1{font-size:28px;font-weight:300;color:#e8c97e;margin-bottom:10px;letter-spacing:-0.3px}
+.onboard h2{font-size:22px;font-weight:400;color:#e8c97e;margin-bottom:10px}
+.onboard p{color:#b8a880;font-size:15px;line-height:1.7;margin-bottom:28px;max-width:340px}
+.onboard .subtitle{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8a7040;margin-bottom:16px}
+
+/* LANGUAGE GRID */
+/* PROTOCOL CARDS */
+.protocol-list{width:100%;max-width:380px;display:flex;flex-direction:column;gap:14px;margin-bottom:0}
+.protocol-card{
+  padding:20px;border-radius:16px;
+  background:#0e0e0a;border:1px solid #2e2410;
+  text-align:left;cursor:pointer;transition:all 0.2s;
+}
+.protocol-card:hover{border-color:#c9a84c;background:#111008}
+.protocol-card h3{color:#e8c97e;font-size:17px;font-weight:400;margin-bottom:6px}
+.protocol-card .proto-duration{font-size:11px;letter-spacing:2px;color:#9a7a40;text-transform:uppercase;margin-bottom:10px}
+.protocol-card ul{list-style:none;padding:0}
+.protocol-card ul li{color:#b8a880;font-size:13px;padding:3px 0;padding-left:16px;position:relative;line-height:1.5}
+.protocol-card ul li::before{content:"·";position:absolute;left:0;color:#c9a84c;font-size:18px;top:-2px}
+.proto-badge{
+  display:inline-block;font-size:10px;letter-spacing:1px;
+  padding:3px 8px;border-radius:99px;margin-bottom:10px;text-transform:uppercase;
+}
+.proto-badge.brain{background:#1a1a2e;color:#a090d0;border:1px solid #3a3a6e}
+.proto-badge.hormonal{background:#1a0d1a;color:#d090d0;border:1px solid #6e3a6e}
+.proto-badge.advanced{background:#0d1a1a;color:#70d0c8;border:1px solid #2a6e6a}
+.proto-badge.soon{background:#1a1508;color:#6a5a30;border:1px solid #3a3010}
+
+/* CYCLE INPUT */
+.cycle-input-wrap{width:100%;max-width:280px}
+.cycle-slider{width:100%;margin:16px 0;accent-color:#c9a84c}
+.cycle-val{font-size:48px;color:#e8c97e;text-align:center;line-height:1;margin:8px 0}
+.cycle-val span{font-size:18px;color:#b89060}
+.cycle-options{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;justify-content:center}
+.cycle-opt{
+  padding:8px 16px;border-radius:99px;font-family:inherit;font-size:13px;
+  background:#0e0e0a;border:1px solid #2e2410;color:#9a8860;cursor:pointer;
+  transition:all 0.2s;
+}
+.cycle-opt.active{background:#1a1508;border-color:#c9a84c;color:#e8c97e}
+
+/* BUTTONS */
+.btn{
+  width:100%;padding:14px;border-radius:12px;
+  font-family:'Cormorant Garamond',serif;font-size:16px;
+  cursor:pointer;border:none;transition:opacity 0.15s;margin-top:10px;
+}
+.btn:active{opacity:0.8}
+.btn-gold{background:linear-gradient(135deg,#c9a84c,#8b6914);color:#0a0a0f;font-weight:600}
+.btn-ghost{background:#1a1408;border:1px solid #6a5020;color:#c8a060;font-size:14px}
+.btn-ghost:hover{border-color:#c9a84c;color:#e8c97e}
+.btn-green{background:linear-gradient(135deg,#1a3a1a,#2a5a2a);border:1px solid #3a7a3a;color:#7ed896;animation:pulse 2s infinite}
+.btn-purple{background:linear-gradient(135deg,#1a1a2e,#2a2a4e);border:1px solid #3a3a6e;color:#a090d0}
+.btn-outline-green{background:#0d1a0d;border:1px solid #3a7a3a;color:#7ed896;font-size:14px}
+.btn-row{display:flex;gap:10px}
+.btn-row .btn{flex:1}
+
+/* ── TRACKER UI ── */
+.header{text-align:center;margin-bottom:22px}
+.header-label{font-size:10px;letter-spacing:3px;color:#8a7040;text-transform:uppercase;margin-bottom:6px}
+.header-day{font-size:34px;font-weight:300;color:#e8c97e;letter-spacing:-0.5px}
+.header-day span{color:#7a6030;font-size:20px}
+.header-phase{font-size:12px;color:#b8905a;margin-top:4px;letter-spacing:1px}
+
+.dots{display:flex;gap:4px;margin-bottom:24px;flex-wrap:wrap;justify-content:center}
+.dot{width:10px;height:10px;border-radius:50%;transition:transform 0.2s}
+
+.card{border-radius:16px;padding:22px;margin-bottom:14px;border:1px solid #1e1a10}
+.card-fast{background:linear-gradient(135deg,#0d0d1a 0%,#111108 100%)}
+.card-food{background:#0d0d08}
+.card-insight{background:#080d08;border-color:#152015}
+.card-remind{background:#0d080d;border-color:#1e1018}
+.card-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.card-label.gold{color:#9a7a40}
+.card-label.green{color:#4a8a4a}
+.card-label.purple{color:#8a4a8a}
+
+.fast-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.fast-hours{font-size:40px;color:#e8c97e;line-height:1}
+.fast-hours span{font-size:18px;color:#b89060}
+
+.progress-track{background:#1a1510;border-radius:99px;height:6px;overflow:hidden}
+.progress-fill{height:100%;border-radius:99px;transition:width 1s linear}
+.progress-fill.active{background:linear-gradient(90deg,#8b6914,#e8c97e)}
+.progress-fill.done{background:#7ed896}
+.progress-labels{display:flex;justify-content:space-between;margin-top:7px;font-size:12px;color:#9a8050}
+.progress-labels span{color:#c9a84c}
+.done-label{color:#7ed896 !important}
+
+.timer-box{text-align:center;padding:18px;background:#08080f;border-radius:12px;margin-bottom:16px}
+.timer-title{font-size:10px;letter-spacing:2px;color:#6a6090;text-transform:uppercase;margin-bottom:6px}
+.timer-val{font-size:46px;color:#a090d0;font-family:'JetBrains Mono',monospace;letter-spacing:2px;line-height:1}
+.timer-sub{font-size:10px;color:#6a6090;margin-top:5px}
+
+.food-text{color:#c8a870;font-size:14px;line-height:1.65}
+.insight-text{color:#7aaa7a;font-size:14px;line-height:1.75}
+.insight-dots{display:flex;gap:5px;margin-top:14px}
+.insight-dot{width:6px;height:6px;border-radius:50%;cursor:pointer;transition:background 0.2s}
+
+.remind-row{display:flex;justify-content:space-between;align-items:center}
+.remind-time{color:#c870c8;font-size:24px}
+.remind-set{color:#7ab87a;font-size:12px}
+.btn-notif{background:#1a0d1a;border:1px solid #7a3a7a;border-radius:8px;color:#c870c8;font-size:12px;padding:7px 12px;cursor:pointer;font-family:inherit}
+
+.rest-day{text-align:center;padding:30px 20px}
+.rest-icon{font-size:52px;margin-bottom:12px}
+.rest-title{color:#e8c97e;font-size:20px;margin-bottom:8px;font-weight:400}
+.rest-text{color:#b8a880;font-size:14px;line-height:1.7}
+
+.footer{text-align:center;margin-top:8px;font-size:12px;color:#7a6040}
+
+/* ── MACROS TABLE ── */
+.macros-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px}
+.macros-table th{
+  font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
+  color:#5a4a28;font-weight:600;padding:0 0 8px;text-align:left;border-bottom:1px solid #1e1a0e
+}
+.macros-table th:not(:first-child){text-align:center}
+.macros-table td{padding:7px 0;border-bottom:1px solid #141208;vertical-align:middle}
+.macros-table tr:last-child td{border-bottom:none}
+.mt-macro-name{font-size:10px;letter-spacing:1px;text-transform:uppercase;font-weight:700;padding-right:8px}
+.mt-macro-name.carbs{color:#e8b84c}
+.mt-macro-name.protein{color:#70c8d0}
+.mt-macro-name.fat{color:#c870c8}
+.mt-macro-name.kcal{color:#c8a870;font-size:10px}
+.mt-input{
+  background:transparent;border:none;border-bottom:1px solid #2e2810;
+  color:#e8c97e;font-size:15px;font-family:'Cormorant Garamond',serif;
+  width:52px;text-align:center;padding:2px 0;outline:none;
+  -moz-appearance:textfield;
+}
+.mt-input::-webkit-outer-spin-button,.mt-input::-webkit-inner-spin-button{-webkit-appearance:none}
+.mt-input:focus{border-bottom-color:#c9a84c}
+.mt-kcal-val{color:#e8c97e;font-family:'Cormorant Garamond',serif;font-size:16px;text-align:center}
+.mt-save-row{display:flex;justify-content:flex-end;margin-top:12px}
+
+/* ── AD UNIT ── */
+.ad-unit{
+  width:100%;min-height:60px;background:#0e0e0a;
+  border:1px dashed #2a2010;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:14px;overflow:hidden;
+}
+.ad-placeholder{color:#6a5a30;font-size:11px;letter-spacing:2px;text-transform:uppercase}
+
+/* ── MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:200;
+  display:flex;align-items:center;justify-content:center;padding:24px;
+  overflow-y:auto;
+}
+.modal{
+  background:#0e0e0a;border:1px solid #2e2410;
+  border-radius:18px;padding:32px 26px;max-width:380px;width:100%;
+  text-align:center;
+}
+.modal-icon{font-size:52px;margin-bottom:12px}
+.modal h2{color:#e8c97e;font-size:22px;font-weight:400;margin-bottom:8px}
+.modal .modal-sub{color:#8acf90;font-size:13px;margin-bottom:18px}
+.modal-list{text-align:left;margin-bottom:16px}
+.modal-list p{font-size:13px;margin:6px 0;line-height:1.5}
+.modal-list p.green{color:#7aaa7a}
+.modal-list p.dim{color:#a09070}
+.modal-list p.bold{color:#c8a060;font-size:14px;font-weight:600;margin-top:14px}
+.modal hr{border:none;border-top:1px solid #2a2010;margin:16px 0}
+
+.reset-btn{
+  position:fixed;bottom:20px;right:20px;z-index:50;
+  background:#1a1510;border:1px solid #2a2010;
+  color:#7a6a40;font-size:11px;padding:7px 12px;
+  border-radius:8px;cursor:pointer;font-family:inherit;
+}
+/* Inline back button — sits at top of each onboarding screen */
+.inline-back{
+  display:flex;align-items:center;gap:6px;
+  background:transparent;border:none;
+  color:#8a7040;font-family:'Cormorant Garamond',serif;
+  font-size:14px;cursor:pointer;padding:4px 0;
+  margin-bottom:16px;transition:color 0.2s;
+  align-self:flex-start;
+}
+.inline-back:hover{color:#c9a84c}
+.inline-back svg{width:16px;height:16px;flex-shrink:0}
+
+/* Schedule preview screen */
+.sched-screen{position:relative;z-index:1;max-width:460px;margin:0 auto;padding:20px 18px 100px}
+.sched-header{text-align:center;margin-bottom:28px;padding-top:8px}
+.sched-header h2{font-size:24px;font-weight:300;color:#e8c97e;margin-bottom:4px}
+.sched-header p{font-size:13px;color:#9a7a40;letter-spacing:1px}
+
+.phase-block{margin-bottom:22px}
+.phase-title{
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  padding:6px 12px;border-radius:99px;display:inline-block;
+  margin-bottom:12px;
+}
+.phase-title.power{background:#1a1508;color:#c9a84c;border:1px solid #3a2e10}
+.phase-title.manifestation{background:#1a0d1a;color:#c870c8;border:1px solid #4a2a4a}
+.phase-title.power2{background:#1a1508;color:#c9a84c;border:1px solid #3a2e10}
+.phase-title.nurture{background:#0d1a0d;color:#7aaa7a;border:1px solid #2a4a2a}
+.phase-title.brain{background:#1a1a2e;color:#a090d0;border:1px solid #3a3a6e}
+.phase-title.brain2{background:#1a1a2e;color:#a090d0;border:1px solid #3a3a6e}
+.phase-title.advanced{background:#0d1a1a;color:#70d0c8;border:1px solid #2a6e6a}
+
+.day-row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;border-radius:10px;margin-bottom:6px;
+  background:#0e0e0a;border:1px solid #1e1a10;
+  transition:border-color 0.2s;
+}
+.day-row.current{border-color:#c9a84c;background:#111008}
+.day-num{
+  font-size:11px;color:#8a7050;width:38px;flex-shrink:0;
+  font-family:'JetBrains Mono',monospace;
+}
+.day-fast{font-size:18px;color:#e8c97e;width:48px;flex-shrink:0;line-height:1}
+.day-fast span{font-size:12px;color:#9a7040}
+.day-fast.rest{font-size:13px;color:#7aaa7a}
+.day-diet{font-size:12px;color:#a8906a;line-height:1.4;flex:1}
+.day-start{font-size:11px;color:#8a7050;flex-shrink:0;font-family:'JetBrains Mono',monospace}
+
+.sched-start-btn{
+  position:sticky;bottom:24px;
+  width:100%;padding:15px;border-radius:12px;
+  background:linear-gradient(135deg,#c9a84c,#8b6914);
+  border:none;color:#0a0a0f;font-family:'Cormorant Garamond',serif;
+  font-size:17px;font-weight:600;cursor:pointer;
+  box-shadow:0 4px 24px #c9a84c30;margin-top:8px;
+}
+
+@keyframes pulse{
+  0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(126,216,150,0.25)}
+  50%{opacity:0.9;box-shadow:0 0 0 10px rgba(126,216,150,0)}
+}
+
+/* ── MAIN NAV BAR ── */
+.main-nav{
+  position:sticky;top:0;z-index:100;
+  display:grid;grid-template-columns:1fr 1fr;
+  background:#0d0c0a;border-bottom:1px solid #1e1a0e;
+  padding:8px 14px 0;gap:4px;
+  max-width:460px;margin:0 auto;
+}
+.main-nav-btn{
+  background:none;border:none;border-bottom:2px solid transparent;
+  color:#6a5a30;font-family:'Cormorant Garamond',serif;
+  font-size:15px;padding:10px 8px 10px;cursor:pointer;
+  letter-spacing:0.3px;transition:color 0.2s,border-color 0.2s;
+}
+.main-nav-btn.active{color:#e8c97e;border-bottom-color:#c9a84c}
+.main-nav-btn:hover:not(.active){color:#b8a870}
+
+/* ── TAB PANELS ── */
+.tab-panel{display:none;animation:fadeIn 0.3s ease}
+.tab-panel.active{display:block!important}
+
+/* ── CYCLE TRACKER ── */
+.ct-wrap{
+  background:#fdf0f4;min-height:calc(100vh - 54px);
+  padding:22px 16px 60px;
+  font-family:'Cormorant Garamond',serif;
+}
+.ct-page-title{
+  font-size:24px;color:#5a2840;font-weight:400;margin-bottom:2px;
+  padding:0 2px;
+}
+.ct-page-sub{
+  font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  color:#b07898;margin-bottom:22px;padding:0 2px;
+}
+.ct-month-block{margin-bottom:28px}
+.ct-month-heading{
+  font-size:15px;letter-spacing:1px;text-transform:uppercase;
+  color:#5a2840;margin-bottom:10px;padding:0 2px;
+  display:flex;align-items:center;gap:8px;
+}
+.ct-month-heading.current-month-label::after{
+  content:'Today';font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
+  background:#d4547a;color:#fff;border-radius:99px;padding:2px 8px;
+}
+.ct-weekdays{
+  display:grid;grid-template-columns:repeat(7,1fr);
+  margin-bottom:4px;
+}
+.ct-weekday{
+  font-size:9px;letter-spacing:1px;text-transform:uppercase;
+  color:#c0a0b0;text-align:center;padding:3px 0;
+}
+.ct-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.ct-day{
+  aspect-ratio:1;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:#5a2840;cursor:default;
+  position:relative;user-select:none;transition:background 0.15s,transform 0.1s;
+}
+.ct-day.empty{pointer-events:none}
+.ct-day.other-month{color:#d8b8c8}
+.ct-day.today{
+  background:#d4547a;color:#fff;font-weight:700;
+  box-shadow:0 2px 10px #d4547a50;
+}
+.ct-day.clickable{cursor:pointer}
+.ct-day.clickable:hover{background:#f9d0e0;transform:scale(1.1)}
+.ct-day.today.clickable:hover{background:#c03060;transform:scale(1.1)}
+.ct-day.period-start{
+  background:#d4547a!important;color:#fff!important;font-weight:700;
+  box-shadow:0 2px 10px #d4547a50;ring:none;
+}
+.ct-day.period-start::after{
+  content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);
+  width:4px;height:4px;border-radius:50%;background:#fff;opacity:0.8;
+}
+.ct-day.future{color:#e8c8d8;cursor:not-allowed}
+.ct-day.out-of-range{color:#e8c8d8;cursor:not-allowed}
+
+/* phase colors on calendar */
+.ct-day.ph-power1{background:#ffd6e8;color:#5a2840}
+.ct-day.ph-manifestation{background:#ffeea0;color:#5a3800}
+.ct-day.ph-power2{background:#dfc8f8;color:#38206a}
+.ct-day.ph-nurture{background:#c8edda;color:#1a4a30}
+.ct-day.ph-next-period{background:#d4547a;color:#fff;opacity:0.35}
+/* period-start always wins over phase color */
+.ct-day.period-start.ph-power1,
+.ct-day.period-start.ph-manifestation,
+.ct-day.period-start.ph-power2,
+.ct-day.period-start.ph-nurture{background:#d4547a!important;color:#fff!important}
+
+/* phase prediction card */
+.ct-phases-card{
+  background:#fff5f8;border:1px solid #f0c8d8;border-radius:14px;
+  padding:16px 18px;margin-bottom:16px;overflow:hidden;
+}
+.ct-phases-title{
+  font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  color:#b07898;margin-bottom:12px;
+}
+.ct-phase-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:9px 12px;border-radius:9px;margin-bottom:6px;
+}
+.ct-phase-row:last-child{margin-bottom:0}
+.ct-phase-name{font-size:14px;font-weight:600}
+.ct-phase-dates{font-size:12px;opacity:0.75;text-align:right;line-height:1.4}
+.ct-hint{
+  font-size:11px;color:#b07898;text-align:center;
+  margin:-6px 0 16px;letter-spacing:0.3px;line-height:1.5;
+}
+.ct-selected-info{
+  background:#fff5f8;border:1px solid #f0c8d8;border-radius:12px;
+  padding:14px 16px;margin-bottom:16px;
+}
+.ct-selected-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#b07898;margin-bottom:6px}
+.ct-selected-date{font-size:18px;color:#d4547a}
+.ct-clear-period{
+  font-size:12px;color:#b07898;background:none;border:none;
+  cursor:pointer;float:right;margin-top:2px;text-decoration:underline;
+  font-family:'Cormorant Garamond',serif;
+}
+.ct-step-btn{
+  background:none;border:1px solid #f0c8d8;border-radius:50%;
+  width:30px;height:30px;color:#d4547a;font-size:18px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  line-height:1;transition:background 0.15s;
+}
+.ct-step-btn:hover{background:#fde8f0}
+.ct-month-sep{
+  height:1px;background:linear-gradient(90deg,transparent,#f0c8d8,transparent);
+  margin:4px 0 28px;
+}
+
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+
+<!-- ═══════════════════════════════════════════
+     SCREEN 3: MAIN (PROTOCOL + CYCLE TRACKER)
+════════════════════════════════════════════ -->
+<div class="screen active" id="screen-protocol">
+  <!-- NAV BAR -->
+  <div class="main-nav">
+    <button class="main-nav-btn active" id="nav-protocols" onclick="switchTab('protocols')">
+      🌙 Protocols
+    </button>
+    <button class="main-nav-btn" id="nav-cycle-tracker" onclick="switchTab('cycle-tracker')">
+      🌸 Track Your Cycle
+    </button>
+  </div>
+
+  <!-- TAB: PROTOCOLS -->
+  <div id="tab-protocols" class="tab-panel active">
+    <div style="padding:20px 18px 60px;max-width:460px;margin:0 auto">
+      <div class="protocol-list" id="protocol-list"><!-- injected by JS --></div>
+    </div>
+  </div>
+
+  <!-- TAB: CYCLE TRACKER -->
+  <div id="tab-cycle-tracker" class="tab-panel">
+    <div class="ct-wrap" id="ct-wrap"><!-- rendered by JS --></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCREEN 4: CYCLE LENGTH
+════════════════════════════════════════════ -->
+<div class="screen" id="screen-cycle">
+<div class="app"><div class="onboard">
+  <button class="inline-back" onclick="navBack()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+    <span class="back-label">Back</span>
+  </button>
+  <div class="onboard-icon">🌕</div>
+  <div class="subtitle" id="c-subtitle">Personalize your plan</div>
+  <h2 id="c-title">How long is your cycle?</h2>
+  <p id="c-desc">Your fasting phases will be proportionally scaled to your cycle length so each phase lands at the right time.</p>
+  <div class="cycle-input-wrap">
+    <div class="cycle-options">
+      <button class="cycle-opt" onclick="setCyclePreset(21)" id="co-21">21 days</button>
+      <button class="cycle-opt" onclick="setCyclePreset(28)" id="co-28">28 days</button>
+      <button class="cycle-opt" onclick="setCyclePreset(30)" id="co-30">30 days</button>
+      <button class="cycle-opt" onclick="setCyclePreset(35)" id="co-35">35 days</button>
+    </div>
+    <input type="range" class="cycle-slider" min="21" max="40" value="28" id="cycle-slider" oninput="updateCycleSlider(this.value)"/>
+    <div class="cycle-val"><span id="cycle-display">28</span> <span id="c-days-label">days</span></div>
+  </div>
+
+  <div style="width:100%;max-width:320px;margin-top:24px;padding-top:20px;border-top:1px solid #1e1a0e">
+    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#5a4a28;margin-bottom:6px">Where are you in your cycle?</div>
+    <p style="font-size:13px;color:#8a7050;margin-bottom:14px;line-height:1.5">Choose which day of your cycle you're on today — the tracker will start from that point.</p>
+    <div class="cycle-options" id="start-day-presets">
+      <button class="cycle-opt" onclick="setStartDayPreset(1)"  id="sd-1">Day 1</button>
+      <button class="cycle-opt" onclick="setStartDayPreset(7)"  id="sd-7">Day 7</button>
+      <button class="cycle-opt" onclick="setStartDayPreset(14)" id="sd-14">Day 14</button>
+      <button class="cycle-opt" onclick="setStartDayPreset(21)" id="sd-21">Day 21</button>
+    </div>
+    <input type="range" class="cycle-slider" min="1" max="28" value="1" id="startday-slider" oninput="updateStartDaySlider(this.value)"/>
+    <div class="cycle-val">Day <span id="startday-display">1</span></div>
+  </div>
+
+  <button class="btn btn-gold" style="max-width:320px;margin-top:20px" onclick="confirmCycle()" id="c-confirm">Personalize My Plan →</button>
+  <button class="btn btn-ghost" style="max-width:320px;font-size:13px" onclick="skipCycle()" id="c-skip">Skip — use default 30 days</button>
+</div></div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCREEN 5: SCHEDULE PREVIEW
+════════════════════════════════════════════ -->
+<div class="screen" id="screen-preview">
+<div class="sched-screen">
+  <button class="inline-back" onclick="navBack()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+    <span class="back-label">Back</span>
+  </button>
+  <div class="sched-header">
+    <h2 id="preview-title">Your Complete Schedule</h2>
+    <p id="preview-sub">Review your personalized plan</p>
+  </div>
+  <div id="schedule-body"><!-- injected by JS --></div>
+  <button class="sched-start-btn" onclick="launchTracker()" id="preview-start-btn">Begin My Journey →</button>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCREEN 6: TRACKER
+════════════════════════════════════════════ -->
+<div class="screen" id="screen-tracker">
+<div class="app" id="tracker-app">
+  <!-- rendered by JS -->
+</div>
+</div>
+
+<!-- MODALS rendered inline by JS -->
+<div id="modal-container"></div>
+
+
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// TRANSLATIONS
+// ═══════════════════════════════════════════════════════════════
+const T = {
+  en: {
+    pSubtitle:"Choose your program", pTitle:"Your Fasting Journey", pDesc:"Select the protocol that matches your goal.",
+    cSubtitle:"Personalize your plan", cTitle:"How long is your cycle?", cDesc:"Your fasting phases will be proportionally scaled to your cycle length so each phase lands at the right time.",
+    cDays:"days", cConfirm:"Preview My Plan →", cSkip:"Skip — use default 30 days",    backLabel:"Back",
+    previewTitle:"Your Complete Schedule", previewSub:"Review your personalized plan before starting",
+    previewStartBtn:"Begin My Journey →",
+    previewRestDay:"Rest & Nourish", previewNoFast:"No fasting",
+    fastLabel:"Today's Fast", startsLabel:"Starts", extendedTag:"Extended fast", gutResetTag:"24h Gut Reset",
+    nutritionLabel:"Today's Nutrition Plan", bodyLabel:"What's Happening in Your Body",
+    ketoLabel:"Ketosis & Your Brain", fastBeginsLabel:"Fast Begins",
+    startFast:"🌙 Start Fast Now", registerEnd:"✅ Register End of Fast",
+    viewBenefits:"🎉 View Benefits", nextDay:"Day", journeyComplete:"🏆 Journey complete!",
+    elapsed:"Elapsed", remaining:"Remaining", windowComplete:"✓ Window complete",
+    fasting:"Fasting",
+    reminderSet:"🔔 Reminder set", enableReminder:"Enable reminders",
+    daysRemaining:"days remaining in program",
+    congratsTitle:"Fast Complete!", congratsSub:"hours of deep metabolic work — here's what you achieved:",
+    breakFastTitle:"🍽️ Break your fast with:", closeBtn:"Close",
+    restTitle:"Rest & Nurture Day", restText:"No fasting today. Focus on nourishing your body with whole foods, good sleep, and gentle movement. Your hormones are rebuilding.",
+    phaseLabels:{power:"Power Phase",manifestation:"Manifestation Phase",power2:"Power Phase 2",nurture:"Nurture Phase",brain2:"Brain Health Protocol",advanced:"Advanced Reset"},
+    adPlaceholder:"Advertisement",
+    returnHome:"Stop this protocol and return to home page",
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════
+// PROTOCOLS DEFINITION
+// ═══════════════════════════════════════════════════════════════
+const PROTOCOLS = {
+
+  reset30: {
+    id:'reset30', gender:'female',
+    name:{en:"30-Day Hormonal Reset"},
+    duration:{en:"30 Days"},
+    benefits:{
+      en:["Synced to your hormonal cycle","Phases: Power → Manifestation → Nurture","Supports progesterone & estrogen balance","Gut reset & microbiome optimization","Adapts to your cycle length (21–40 days)"],
+    },
+    badge:'hormonal',
+    baseSchedule: [
+      // Power Phase (days 1-10): ketobiotic
+      {phase:'power',h:13,s:18,diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      {phase:'power',h:13,s:18,diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      {phase:'power',h:13,s:18,diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      {phase:'power',h:13,s:18,diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      {phase:'power',h:15,s:18,diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      {phase:'power',h:17,s:18,diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      {phase:'power',h:17,s:18,diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      {phase:'power',h:17,s:18,diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      {phase:'power',h:17,s:18,diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      {phase:'power',h:17,s:18,diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      // Manifestation Phase (days 11-15): hormone feasting
+      {phase:'manifestation',h:13,s:18,diet:{en:"Hormone feast: <150g carbs (hummus, fruit, root veggies), <50g protein, some healthy fats."}},
+      {phase:'manifestation',h:13,s:18,diet:{en:"Hormone feast: <150g carbs (hummus, fruit, root veggies), <50g protein, some healthy fats."}},
+      {phase:'manifestation',h:13,s:18,diet:{en:"Hormone feast: <150g carbs (hummus, fruit, root veggies), <50g protein, some healthy fats."}},
+      {phase:'manifestation',h:13,s:18,diet:{en:"Hormone feast: <150g carbs (hummus, fruit, root veggies), <50g protein, some healthy fats."}},
+      {phase:'manifestation',h:13,s:18,diet:{en:"Hormone feast: <150g carbs (hummus, fruit, root veggies), <50g protein, some healthy fats."}},
+      // Power Phase 2 (days 16-19)
+      {phase:'power2',h:15,s:18,diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      {phase:'power2',h:15,s:18,diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      {phase:'power2',h:15,s:18,diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      {phase:'power2',h:15,s:18,diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      // Nurture Phase (days 20-30): no fasting
+      {phase:'nurture',h:0,s:null,diet:{en:"Nourish freely today. Whole foods, rest, gentle movement."}},
+      {phase:'nurture',h:0,s:null,diet:{en:"Nourish freely today. Whole foods, rest, gentle movement."}},
+      {phase:'nurture',h:0,s:null,diet:{en:"Nourish freely today. Whole foods, rest, gentle movement."}},
+      {phase:'nurture',h:0,s:null,diet:{en:"Nourish freely today. Whole foods, rest, gentle movement."}},
+      {phase:'nurture',h:0,s:null,diet:{en:"Nourish freely today. Whole foods, rest, gentle movement."}},
+      {phase:'nurture',h:0,s:null,diet:{en:"Nourish freely today. Whole foods, rest, gentle movement."}},
+      {phase:'nurture',h:0,s:null,diet:{en:"Nourish freely today. Whole foods, rest, gentle movement."}},
+      {phase:'nurture',h:0,s:null,diet:{en:"Nourish freely today. Whole foods, rest, gentle movement."}},
+      {phase:'nurture',h:0,s:null,diet:{en:"Nourish freely today. Whole foods, rest, gentle movement."}},
+      {phase:'nurture',h:0,s:null,diet:{en:"Nourish freely today. Whole foods, rest, gentle movement."}},
+      {phase:'nurture',h:0,s:null,diet:{en:"Nourish freely today. Whole foods, rest, gentle movement."}},
+    ]
+  }
+  // ADD MORE PROTOCOLS HERE — just follow the same structure above
+  ,
+  advanced: {
+    id:'advanced', gender:'female',
+    name:{en:"Advanced Fasting Reset"},
+    duration:{en:"30 Days"},
+    benefits:{
+      en:["Two 24-hour gut-reset fasts built in","Power phases with 15h → 17h progression","Manifestation phase with hormone feasting","Nurture phase: gentle 13h fasts","Adapts to your cycle length (21–40 days)"],
+    },
+    badge:'advanced',
+    // Base 30-day schedule — used as template; actual schedule built by buildAdvancedSchedule()
+    baseSchedule: [
+      // Power Phase 1 (days 1-10)
+      {phase:'power', h:15, s:18, diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      {phase:'power', h:15, s:18, diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      {phase:'power', h:15, s:18, diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      {phase:'power', h:15, s:18, diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      {phase:'power', h:15, s:18, diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      {phase:'power', h:24, s:18, special:'gutreset', diet:{en:"24h Gut Reset — water fast. Add minerals or ketogenic snacks, fat bombs."}},
+      {phase:'power', h:17, s:18, diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      {phase:'power', h:17, s:18, diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      {phase:'power', h:17, s:18, diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      {phase:'power', h:17, s:18, diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      // Manifestation Phase (days 11-15)
+      {phase:'manifestation', h:15, s:18, diet:{en:"Hormone feast: <150g carbs (hummus, fruits, root veggies), <50g protein, some healthy fats."}},
+      {phase:'manifestation', h:15, s:18, diet:{en:"Hormone feast: <150g carbs (hummus, fruits, root veggies), <50g protein, some healthy fats."}},
+      {phase:'manifestation', h:15, s:18, diet:{en:"Hormone feast: <150g carbs (hummus, fruits, root veggies), <50g protein, some healthy fats."}},
+      {phase:'manifestation', h:15, s:18, diet:{en:"Hormone feast: <150g carbs (hummus, fruits, root veggies), <50g protein, some healthy fats."}},
+      {phase:'manifestation', h:15, s:18, diet:{en:"Hormone feast: <150g carbs (hummus, fruits, root veggies), <50g protein, some healthy fats."}},
+      // Power Phase 2 (days 16-19)
+      {phase:'power2', h:24, s:18, special:'gutreset', diet:{en:"24h Gut Reset — water fast until 18:00. Add minerals or ketogenic snacks, fat bombs."}},
+      {phase:'power2', h:17, s:18, diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      {phase:'power2', h:17, s:18, diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      {phase:'power2', h:17, s:18, diet:{en:"Ketobiotic: 60% healthy fats, <50g carbs from veggies, <75g protein."}},
+      // Nurture Phase (days 20-30): gentle 13h fasts
+      {phase:'nurture', h:13, s:18, diet:{en:"Nourish gently: whole foods, rest, gentle movement. Light 13h fast."}},
+      {phase:'nurture', h:13, s:18, diet:{en:"Nourish gently: whole foods, rest, gentle movement. Light 13h fast."}},
+      {phase:'nurture', h:13, s:18, diet:{en:"Nourish gently: whole foods, rest, gentle movement. Light 13h fast."}},
+      {phase:'nurture', h:13, s:18, diet:{en:"Nourish gently: whole foods, rest, gentle movement. Light 13h fast."}},
+      {phase:'nurture', h:13, s:18, diet:{en:"Nourish gently: whole foods, rest, gentle movement. Light 13h fast."}},
+      {phase:'nurture', h:13, s:18, diet:{en:"Nourish gently: whole foods, rest, gentle movement. Light 13h fast."}},
+      {phase:'nurture', h:13, s:18, diet:{en:"Nourish gently: whole foods, rest, gentle movement. Light 13h fast."}},
+      {phase:'nurture', h:13, s:18, diet:{en:"Nourish gently: whole foods, rest, gentle movement. Light 13h fast."}},
+      {phase:'nurture', h:13, s:18, diet:{en:"Nourish gently: whole foods, rest, gentle movement. Light 13h fast."}},
+      {phase:'nurture', h:13, s:18, diet:{en:"Nourish gently: whole foods, rest, gentle movement. Light 13h fast."}},
+      {phase:'nurture', h:13, s:18, diet:{en:"Nourish gently: whole foods, rest, gentle movement. Light 13h fast."}},
+    ]
+  }
+  ,brain2: {
+    id:'brain2', gender:'female',
+    name:{en:"Brain Health & Anxiety Reset"},
+    duration:{en:"24 Days"},
+    benefits:{
+      en:["48h deep fast for maximum autophagy","GABA upregulation — anxiety reduction","Ketobiotic diet throughout all phases","Power phases: 17h ramp, then 13h → 17h","Gentle 13h Nurture phase to close the cycle"],
+    },
+    badge:'brain',
+    baseSchedule: [
+      // Power Phase 1 (days 1-5): 17h fasts
+      {phase:'power',  h:17, s:18, diet:{en:"60% fat: avocado, cheese, bone broth, veggies. Max 75g carbs."}},
+      {phase:'power',  h:17, s:18, diet:{en:"60% fat: avocado, cheese, bone broth, veggies. Max 75g carbs."}},
+      {phase:'power',  h:17, s:18, diet:{en:"60% fat: avocado, cheese, bone broth, veggies. Max 75g carbs."}},
+      {phase:'power',  h:17, s:18, diet:{en:"60% fat: avocado, cheese, bone broth, veggies. Max 75g carbs."}},
+      {phase:'power',  h:17, s:18, diet:{en:"60% fat: avocado, cheese, bone broth, veggies. Max 75g carbs."}},
+      // Manifestation Phase (days 6-10): 48h fast then recovery
+      {phase:'manifestation', h:48, s:null, special:'waterfast', diet:{en:"48h water fast — day 1. Take minerals and fat bombs only."}},
+      {phase:'manifestation', h:48, s:null, special:'waterfast2', diet:{en:"48h fast continued — day 2. Minerals & fat bomb OK. Break fast gently with bone broth."}},
+      {phase:'manifestation', h:15, s:18, diet:{en:"60% fat: avocado, cheese, bone broth, veggies. Max 75g carbs."}},
+      {phase:'manifestation', h:15, s:18, diet:{en:"60% fat: avocado, cheese, bone broth, veggies. Max 75g carbs."}},
+      {phase:'manifestation', h:15, s:18, diet:{en:"60% fat: avocado, cheese, bone broth, veggies. Max 75g carbs."}},
+      // Power Phase 2 (days 11-19): 13h then 17h
+      {phase:'power2', h:13, s:18, diet:{en:"60% fat: avocado, cheese, bone broth, veggies. Max 75g carbs."}},
+      {phase:'power2', h:13, s:18, diet:{en:"60% fat: avocado, cheese, bone broth, veggies. Max 75g carbs."}},
+      {phase:'power2', h:13, s:18, diet:{en:"60% fat: avocado, cheese, bone broth, veggies. Max 75g carbs."}},
+      {phase:'power2', h:13, s:18, diet:{en:"60% fat: avocado, cheese, bone broth, veggies. Max 75g carbs."}},
+      {phase:'power2', h:13, s:18, diet:{en:"60% fat: avocado, cheese, bone broth, veggies. Max 75g carbs."}},
+      {phase:'power2', h:17, s:18, diet:{en:"60% fat: avocado, cheese, bone broth, veggies. Max 75g carbs."}},
+      {phase:'power2', h:17, s:18, diet:{en:"60% fat: avocado, cheese, bone broth, veggies. Max 75g carbs."}},
+      {phase:'power2', h:17, s:18, diet:{en:"60% fat: avocado, cheese, bone broth, veggies. Max 75g carbs."}},
+      {phase:'power2', h:17, s:18, diet:{en:"60% fat: avocado, cheese, bone broth, veggies. Max 75g carbs."}},
+      // Nurture Phase (days 20-24): gentle 13h
+      {phase:'nurture', h:13, s:18, diet:{en:"60% fat: avocado, cheese, bone broth, veggies. Max 75g carbs."}},
+      {phase:'nurture', h:13, s:18, diet:{en:"60% fat: avocado, cheese, bone broth, veggies. Max 75g carbs."}},
+      {phase:'nurture', h:13, s:18, diet:{en:"60% fat: avocado, cheese, bone broth, veggies. Max 75g carbs."}},
+      {phase:'nurture', h:13, s:18, diet:{en:"60% fat: avocado, cheese, bone broth, veggies. Max 75g carbs."}},
+      {phase:'nurture', h:13, s:18, diet:{en:"60% fat: avocado, cheese, bone broth, veggies. Max 75g carbs."}},
+    ]
+  }
+  // ADD MORE PROTOCOLS HERE — just follow the same structure above
+};
+
+// ═══════════════════════════════════════════════════════════════
+// INSIGHTS
+// ═══════════════════════════════════════════════════════════════
+const FASTING_INSIGHTS = {
+  en:["⚡ Glycogen is depleted. Your liver is now producing ketones — clean fuel for your brain.","🔥 Fat oxidation is accelerating. Stored body fat is your primary energy source right now.","🧠 BDNF is rising — your brain's neuroplasticity fertilizer. You're getting sharper.","🛡️ Autophagy is active — cells are recycling damaged proteins. Cellular anti-aging in action.","💪 Growth hormone is surging, protecting muscle while accelerating fat burn.","🌿 Inflammation markers are dropping. Your immune system is resetting.","⚖️ Insulin is at its floor. Every cell is regaining sensitivity — deep metabolic healing.","🔬 Mitochondria are becoming more efficient. Energy production is being optimized."],
+};
+const KETO_INSIGHTS = {
+  en:["🧠 Ketones yield 25% more ATP than glucose — your brain is on premium fuel.","💡 Beta-hydroxybutyrate reduces neuroinflammation directly at the source.","🎯 No glucose spikes, no crashes — just clean, sustained mental clarity.","🛡️ Ketones increase GABA production — your brain's natural calming neurotransmitter.","⚡ Your hippocampus thrives on ketones. You're nourishing your memory center.","🌱 Ketosis activates the AMPK longevity pathway — the same switch triggered by exercise.","💪 MCT fats convert to ketones in 30 min — instant brain fuel.","🔥 Every bite of avocado and healthy fat feeds your neurons what they prefer over sugar."],
+};
+const BREAK_FAST_FOODS = {
+  en:["🥣 Start with bone broth — gently reactivates digestion without shock.","🥚 Soft-boiled or scrambled eggs: easy protein, zero fiber overload.","🥑 A few slices of avocado — healthy fats that ease the transition.","🫐 Small portion of berries — low glycemic, antioxidant-rich.","❌ Avoid: raw vegetables, heavy meat, processed carbs — let your gut wake up slowly."],
+};
+const CONGRATS_BENEFITS = {
+  en:["✅ Deep autophagy triggered — cells cleaned house and recycled damaged proteins","✅ Significant fat oxidation — stored body fat was your primary fuel","✅ Insulin sensitivity reset — your cells are primed to respond more efficiently","✅ Gut microbiome optimized — beneficial bacteria have rebalanced","✅ Inflammatory markers dropped — your immune system received a natural reboot","✅ Growth hormone elevated — muscle was protected while fat burned"],
+};
+
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+const KEY = 'fasting_v14';
+let state = {
+  lang: null, gender: null, protocol: null, cycleLength: 28, cycleStartDay: 1,
+  schedule: null, setup: false,
+  currentDay: 1, fastStartTime: null, fastEnded: false, programStartDate: null,
+  insight: 0, notifScheduled: {}, macros: {}
+};
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return null;
+}
+function saveState() {
+  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+const saved = loadState();
+if (saved) {
+  state = {...state, ...saved};
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CYCLE ADJUSTMENT
+// Phase percentages: Power1=33%, Manifestation=16%, Power2=13%, Nurture=38%
+// ═══════════════════════════════════════════════════════════════
+function buildAdjustedSchedule(cycleLength) {
+  const base = PROTOCOLS.reset30.baseSchedule;
+
+  // Calculate day counts per phase using exact percentages
+  // Use Math.round and correct last phase to ensure total = cycleLength exactly
+  const p1Raw = Math.round(cycleLength * 0.33);
+  const p2Raw = Math.round(cycleLength * 0.13);
+  const p3Raw = Math.round(cycleLength * 0.10);
+  const p4Raw = cycleLength - p1Raw - p2Raw - p3Raw; // Nurture gets the remainder (~43%)
+
+  const phaseDays = {
+    power:        Math.max(1, p1Raw),
+    manifestation:Math.max(1, p2Raw),
+    power2:       Math.max(1, p3Raw),
+    nurture:      Math.max(1, p4Raw),
+  };
+
+  // Diet templates pulled from baseSchedule
+  const diets = {
+    power:         base.find(d => d.phase === 'power').diet,
+    manifestation: base.find(d => d.phase === 'manifestation').diet,
+    power2:        base.find(d => d.phase === 'power2').diet,
+    nurture:       base.find(d => d.phase === 'nurture').diet,
+  };
+
+  // Fasting hour ramp for Power phases: starts at 13h, ramps to 17h over the phase
+  // First 40% of power days = 13h, next 20% = 15h, last 40% = 17h
+  function powerHours(dayIndex, totalPhaseDays) {
+    const pct = dayIndex / totalPhaseDays;
+    if (pct < 0.40) return 13;
+    if (pct < 0.60) return 15;
+    return 17;
+  }
+
+  // Power2 is shorter so stays at 15h throughout
+  function power2Hours(dayIndex, totalPhaseDays) {
+    return 15;
+  }
+
+  let schedule = [];
+  let dayNum = 1;
+
+  // ── Power Phase 1 ──
+  for (let i = 0; i < phaseDays.power; i++) {
+    schedule.push({ d: dayNum, h: powerHours(i, phaseDays.power), s: 18, phase: 'power', diet: diets.power });
+    dayNum++;
+  }
+
+  // ── Manifestation Phase ──
+  for (let i = 0; i < phaseDays.manifestation; i++) {
+    schedule.push({ d: dayNum, h: 13, s: 18, phase: 'manifestation', diet: diets.manifestation });
+    dayNum++;
+  }
+
+  // ── Power Phase 2 ──
+  for (let i = 0; i < phaseDays.power2; i++) {
+    schedule.push({ d: dayNum, h: power2Hours(i, phaseDays.power2), s: 18, phase: 'power2', diet: diets.power2 });
+    dayNum++;
+  }
+
+  // ── Nurture Phase ──
+  for (let i = 0; i < phaseDays.nurture; i++) {
+    schedule.push({ d: dayNum, h: 0, s: null, phase: 'nurture', diet: diets.nurture });
+    dayNum++;
+  }
+
+  return schedule;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BRAIN2 PROTOCOL SCHEDULE BUILDER
+// Phase split: Power1=21%, Manifestation=21%, Power2=37%, Nurture=21%
+// Manifestation always starts with 2 waterfast days (48h), then recovery fasts
+// Power2: first 5 days = 13h, last 4 days = 17h (proportionally scaled)
+// ═══════════════════════════════════════════════════════════════
+function buildBrain2Schedule(cycleLength) {
+  const base = PROTOCOLS.brain2.baseSchedule;
+  const dietKeto = base.find(d => d.phase === 'power' && !d.special).diet;
+  const diet48day1 = base.find(d => d.special === 'waterfast').diet;
+  const diet48day2 = base.find(d => d.special === 'waterfast2').diet;
+  const diet15 = base.find(d => d.phase === 'manifestation' && d.h === 15).diet;
+  const diet13 = base.find(d => d.phase === 'power2' && d.h === 13).diet;
+  const diet17p2 = base.find(d => d.phase === 'power2' && d.h === 17).diet;
+  const dietNurture = base.find(d => d.phase === 'nurture').diet;
+
+  // Phase percentages based on base 24-day schedule: 5/5/9/5 days
+  const p1Raw = Math.round(cycleLength * 0.21);  // Power 1
+  const p2Raw = Math.round(cycleLength * 0.21);  // Manifestation
+  const p3Raw = Math.round(cycleLength * 0.37);  // Power 2
+  const p4Raw = cycleLength - p1Raw - p2Raw - p3Raw; // Nurture
+
+  const p1Days = Math.max(1, p1Raw);
+  const p2Days = Math.max(3, p2Raw); // need at least 2 waterfast + 1 recovery
+  const p3Days = Math.max(1, p3Raw);
+  const p4Days = Math.max(1, cycleLength - p1Days - p2Days - p3Days);
+
+  let schedule = [];
+  let dayNum = 1;
+
+  // ── Power Phase 1: 17h fasts ──
+  for (let i = 0; i < p1Days; i++) {
+    schedule.push({d:dayNum, h:17, s:18, phase:'power', diet:dietKeto});
+    dayNum++;
+  }
+
+  // ── Manifestation Phase: 2 waterfast days + recovery 15h fasts ──
+  schedule.push({d:dayNum, h:48, s:null, phase:'manifestation', special:'waterfast', diet:diet48day1});
+  dayNum++;
+  schedule.push({d:dayNum, h:48, s:null, phase:'manifestation', special:'waterfast2', diet:diet48day2});
+  dayNum++;
+  const recoveryDays = p2Days - 2;
+  for (let i = 0; i < recoveryDays; i++) {
+    schedule.push({d:dayNum, h:15, s:18, phase:'manifestation', diet:diet15});
+    dayNum++;
+  }
+
+  // ── Power Phase 2: first 55% = 13h, rest = 17h ──
+  const p2_13days = Math.round(p3Days * 0.55);
+  const p2_17days = p3Days - p2_13days;
+  for (let i = 0; i < p2_13days; i++) {
+    schedule.push({d:dayNum, h:13, s:18, phase:'power2', diet:diet13});
+    dayNum++;
+  }
+  for (let i = 0; i < p2_17days; i++) {
+    schedule.push({d:dayNum, h:17, s:18, phase:'power2', diet:diet17p2});
+    dayNum++;
+  }
+
+  // ── Nurture Phase: 13h fasts ──
+  for (let i = 0; i < p4Days; i++) {
+    schedule.push({d:dayNum, h:13, s:18, phase:'nurture', diet:dietNurture});
+    dayNum++;
+  }
+
+  return schedule;
+}
+// Uses same 33/13/10/43% phase split as reset30
+// Power1 always has gut-reset on day 6 of the phase (if phase ≥ 6 days),
+// Power2 always starts with a gut-reset day.
+// Nurture phase uses 13h gentle fasts instead of rest days.
+// ═══════════════════════════════════════════════════════════════
+function buildAdvancedSchedule(cycleLength) {
+  const base = PROTOCOLS.advanced.baseSchedule;
+  const diets = {
+    power:         base.find(d => d.phase === 'power' && !d.special).diet,
+    powerGut:      base.find(d => d.phase === 'power' && d.special === 'gutreset').diet,
+    manifestation: base.find(d => d.phase === 'manifestation').diet,
+    power2:        base.find(d => d.phase === 'power2' && !d.special).diet,
+    power2Gut:     base.find(d => d.phase === 'power2' && d.special === 'gutreset').diet,
+    nurture:       base.find(d => d.phase === 'nurture').diet,
+  };
+
+  // Same percentage split as reset30
+  const p1Raw = Math.round(cycleLength * 0.33);
+  const p2Raw = Math.round(cycleLength * 0.13);
+  const p3Raw = Math.round(cycleLength * 0.10);
+  const p4Raw = cycleLength - p1Raw - p2Raw - p3Raw;
+
+  const phaseDays = {
+    power:         Math.max(1, p1Raw),
+    manifestation: Math.max(1, p2Raw),
+    power2:        Math.max(1, p3Raw),
+    nurture:       Math.max(1, p4Raw),
+  };
+
+  let schedule = [];
+  let dayNum = 1;
+
+  // ── Power Phase 1: 15h for first ~half, gut-reset on day 6 if possible, then 17h ──
+  for (let i = 0; i < phaseDays.power; i++) {
+    const gutResetDay = Math.min(5, phaseDays.power - 1); // day index 5 (6th day), or last if phase < 6
+    if (i === gutResetDay) {
+      schedule.push({d:dayNum, h:24, s:18, phase:'power', special:'gutreset', diet:diets.powerGut});
+    } else if (i < gutResetDay) {
+      schedule.push({d:dayNum, h:15, s:18, phase:'power', diet:diets.power});
+    } else {
+      schedule.push({d:dayNum, h:17, s:18, phase:'power', diet:diets.power});
+    }
+    dayNum++;
+  }
+
+  // ── Manifestation Phase: 15h throughout ──
+  for (let i = 0; i < phaseDays.manifestation; i++) {
+    schedule.push({d:dayNum, h:15, s:18, phase:'manifestation', diet:diets.manifestation});
+    dayNum++;
+  }
+
+  // ── Power Phase 2: starts with gut-reset, then 17h ──
+  for (let i = 0; i < phaseDays.power2; i++) {
+    if (i === 0) {
+      schedule.push({d:dayNum, h:24, s:18, phase:'power2', special:'gutreset', diet:diets.power2Gut});
+    } else {
+      schedule.push({d:dayNum, h:17, s:18, phase:'power2', diet:diets.power2});
+    }
+    dayNum++;
+  }
+
+  // ── Nurture Phase: gentle 13h fasts ──
+  for (let i = 0; i < phaseDays.nurture; i++) {
+    schedule.push({d:dayNum, h:13, s:18, phase:'nurture', diet:diets.nurture});
+    dayNum++;
+  }
+
+  return schedule;
+}
+let screenHistory = [];
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('screen-' + id);
+  if (el) el.classList.add('active');
+  // Update all back-label spans with current language
+  const bl = (T[state.lang||'en']||T.en).backLabel||'Back';
+  document.querySelectorAll('.back-label').forEach(el => el.textContent = bl);
+  window.scrollTo(0,0);
+}
+
+function navTo(id) {
+  const current = document.querySelector('.screen.active');
+  if (current) screenHistory.push(current.id.replace('screen-',''));
+  showScreen(id);
+}
+
+function navBack() {
+  if (screenHistory.length > 0) {
+    const prev = screenHistory.pop();
+    showScreen(prev);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SCHEDULE PREVIEW RENDERER
+// ═══════════════════════════════════════════════════════════════
+function renderSchedulePreview() {
+  const lang = getLang();
+  const tl = T[lang]||T.en;
+  const sch = state.schedule || buildBrainSchedule(28);
+  const phaseLabels = tl.phaseLabels;
+  const phaseColors = {power:'#c9a84c',manifestation:'#c870c8',power2:'#c9a84c',nurture:'#7aaa7a',brain2:'#a090d0',brain_p1:'#a090d0',brain_p2:'#b07ad8',brain_p3:'#80b0f0',advanced:'#70d0c8',if:'#70d890'};
+
+  // Update header text
+  const titleEl = document.getElementById('preview-title');
+  const subEl = document.getElementById('preview-sub');
+  const btnEl = document.getElementById('preview-start-btn');
+  if (titleEl) titleEl.textContent = tl.previewTitle;
+  if (subEl) subEl.textContent = tl.previewSub;
+  if (btnEl) btnEl.textContent = tl.previewStartBtn;
+
+  // Group days by phase
+  let html = '';
+  let currentPhase = null;
+  let phaseOpen = false;
+
+  sch.forEach((day, i) => {
+    const phase = day.phase || 'brain';
+    const phaseLabel = phaseLabels[phase] || phase;
+    const color = phaseColors[phase] || '#c9a84c';
+    const isRest = day.h === 0;
+    const isGutReset = day.special === 'gutreset';
+    const dietShort = (day.diet[lang]||day.diet.en).split('.')[0];
+
+    if (phase !== currentPhase) {
+      if (phaseOpen) html += '</div>';
+      currentPhase = phase;
+      phaseOpen = true;
+      html += `<div class="phase-block">
+        <div class="phase-title ${phase}">${phaseLabel}</div>`;
+    }
+
+    html += `<div class="day-row${isGutReset?' day-row-gut':''}">
+      <div class="day-num">${'D'}${day.d||i+1}</div>
+      ${isRest
+        ? `<div class="day-fast rest">🌿 ${tl.previewRestDay}</div>`
+        : isGutReset
+          ? `<div class="day-fast" style="color:#70d0c8">${day.h}<span style="color:#408a88">h</span></div>`
+          : `<div class="day-fast">${day.h}<span>h</span></div>`
+      }
+      <div class="day-diet">${isRest ? tl.previewNoFast : dietShort}</div>
+      ${!isRest && day.s !== null ? `<div class="day-start">${day.s}:00</div>` : ''}
+    </div>`;
+  });
+
+  if (phaseOpen) html += '</div>'; // close last phase block
+
+  const body = document.getElementById('schedule-body');
+  if (body) body.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ONBOARDING ACTIONS
+// ═══════════════════════════════════════════════════════════════
+function applyTranslations() {
+  const tl = T[state.lang || 'en'];
+  // Back labels
+  document.querySelectorAll('.back-label').forEach(el => el.textContent = tl.backLabel||'Back');
+  // Cycle screen
+  document.getElementById('c-subtitle').textContent = tl.cSubtitle;
+  document.getElementById('c-title').textContent = tl.cTitle;
+  document.getElementById('c-desc').textContent = tl.cDesc;
+  document.getElementById('c-days-label').textContent = tl.cDays;
+  document.getElementById('c-confirm').textContent = tl.cConfirm;
+  document.getElementById('c-skip').textContent = tl.cSkip;
+  renderProtocolList();
+}
+
+function renderProtocolList() {
+  const lang = state.lang || 'en';
+  const t = T[lang];
+  const list = document.getElementById('protocol-list');
+  if (!list) return;
+  let html = '';
+
+  // Multi-phase protocols (all shown — gender screen removed)
+  Object.values(PROTOCOLS).forEach(p => {
+    const benefits = p.benefits[lang] || p.benefits.en;
+    const badgeIcon = p.badge === 'brain' ? '🧠' : p.badge === 'advanced' ? '⚡' : '🌕';
+    html += `<div class="protocol-card" onclick="selectProtocol('${p.id}')">
+      <span class="proto-badge ${p.badge}">${badgeIcon} ${p.name[lang]||p.name.en}</span>
+      <h3>${p.name[lang]||p.name.en}</h3>
+      <div class="proto-duration">${p.duration[lang]||p.duration.en}</div>
+      <ul>${benefits.map(b=>`<li>${b}</li>`).join('')}</ul>
+    </div>`;
+  });
+
+  list.innerHTML = html;
+}
+
+// Returns the user's current cycle day based on Track Your Cycle inputs,
+// or null if the data isn't available / out of range.
+function ctComputeCycleDay() {
+  const ct = state.cycleTracker || {};
+  if (!ct.periodStart) return null;
+  const cl = ct.cycleLength || 28;
+  const start = new Date(ct.periodStart + 'T00:00:00');
+  const today = new Date(); today.setHours(0,0,0,0);
+  const elapsed = Math.floor((today - start) / 86400000); // whole days since period start
+  const cycleDay = elapsed + 1; // day 1 = period start day
+  if (cycleDay < 1 || cycleDay > cl) return null; // outside current cycle
+  return { cycleDay, cycleLength: cl };
+}
+
+function selectProtocol(id) {
+  state.protocol = id;
+  saveState();
+
+  // Pre-populate cycle screen from Track Your Cycle data if available
+  const ct = ctComputeCycleDay();
+  if (ct) {
+    // Set cycle length
+    cycleVal = ct.cycleLength;
+    document.getElementById('cycle-slider').value = cycleVal;
+    document.getElementById('cycle-display').textContent = cycleVal;
+    ['21','28','30','35'].forEach(n => {
+      document.getElementById('co-'+n).classList.toggle('active', parseInt(n) === cycleVal);
+    });
+    // Set start day
+    const sd = document.getElementById('startday-slider');
+    if (sd) { sd.max = cycleVal; sd.value = ct.cycleDay; }
+    startDayVal = ct.cycleDay;
+    refreshStartDayDisplay();
+    refreshStartDayPresets();
+  }
+
+  navTo('cycle');
+}
+
+function launchTracker() {
+  startProgram();
+}
+
+function buildScheduleForProtocol(cycleLength) {
+  if (state.protocol === 'advanced') return buildAdvancedSchedule(cycleLength);
+  if (state.protocol === 'reset30') return buildAdjustedSchedule(cycleLength);
+  if (state.protocol === 'brain2') return buildBrain2Schedule(cycleLength);
+  return buildAdjustedSchedule(cycleLength);
+}
+
+let cycleVal = 28;
+let startDayVal = 1;
+
+function updateCycleSlider(v) {
+  cycleVal = parseInt(v);
+  document.getElementById('cycle-display').textContent = cycleVal;
+  ['21','28','30','35'].forEach(n => {
+    document.getElementById('co-'+n).classList.toggle('active', parseInt(n)===cycleVal);
+  });
+  // Cap start day to new cycle length and update its slider
+  const sdSlider = document.getElementById('startday-slider');
+  if (sdSlider) {
+    sdSlider.max = cycleVal;
+    if (startDayVal > cycleVal) { startDayVal = cycleVal; sdSlider.value = cycleVal; refreshStartDayDisplay(); }
+  }
+  refreshStartDayPresets();
+}
+function setCyclePreset(v) {
+  cycleVal = v;
+  document.getElementById('cycle-slider').value = v;
+  document.getElementById('cycle-display').textContent = v;
+  ['21','28','30','35'].forEach(n => {
+    document.getElementById('co-'+n).classList.toggle('active', parseInt(n)===cycleVal);
+  });
+  const sdSlider = document.getElementById('startday-slider');
+  if (sdSlider) {
+    sdSlider.max = cycleVal;
+    if (startDayVal > cycleVal) { startDayVal = cycleVal; sdSlider.value = cycleVal; refreshStartDayDisplay(); }
+  }
+  refreshStartDayPresets();
+}
+
+function updateStartDaySlider(v) {
+  startDayVal = parseInt(v);
+  refreshStartDayDisplay();
+  refreshStartDayPresets();
+}
+function setStartDayPreset(v) {
+  startDayVal = v;
+  const sl = document.getElementById('startday-slider');
+  if (sl) sl.value = v;
+  refreshStartDayDisplay();
+  refreshStartDayPresets();
+}
+function refreshStartDayDisplay() {
+  const el = document.getElementById('startday-display');
+  if (el) el.textContent = startDayVal;
+}
+function refreshStartDayPresets() {
+  [1,7,14,21].forEach(n => {
+    const btn = document.getElementById('sd-'+n);
+    if (!btn) return;
+    btn.style.display = n <= cycleVal ? '' : 'none';
+    btn.classList.toggle('active', startDayVal === n);
+  });
+}
+
+function confirmCycle() {
+  state.cycleLength   = cycleVal;
+  state.cycleStartDay = startDayVal;
+  state.schedule = buildScheduleForProtocol(cycleVal);
+  saveState();
+  renderSchedulePreview();
+  navTo('preview');
+}
+function skipCycle() {
+  state.cycleLength   = 30;
+  state.cycleStartDay = 1;
+  state.schedule = buildScheduleForProtocol(30);
+  saveState();
+  renderSchedulePreview();
+  navTo('preview');
+}
+
+function startProgram() {
+  state.setup = true;
+  state.currentDay = state.cycleStartDay || 1;
+  state.programStartDate = new Date().toISOString().slice(0,10); // YYYY-MM-DD
+  state.fastStartTime = null;
+  state.fastEnded = false;
+  saveState();
+  scheduleNotifs();
+  showScreen('tracker');
+  renderTracker();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════════
+function fmtTimer(ms) {
+  if(ms<=0)return"00:00:00";
+  const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;
+  return`${pad(h)}:${pad(m)}:${pad(sec)}`;
+}
+function fmtElapsed(ms) {
+  const tm=Math.floor(ms/60000),h=Math.floor(tm/60),m=tm%60;
+  if(!h)return`${m}m`;if(!m)return`${h}h`;return`${h}h ${m}m`;
+}
+function pad(n){return String(n).padStart(2,'0')}
+
+function getSchedule() { return state.schedule || buildBrain2Schedule(28); }
+function getDayData() {
+  const sch = getSchedule();
+  return sch[state.currentDay-1] || sch[sch.length-1];
+}
+function getLang() { return 'en'; }
+function t(key) { return T.en[key] || key; }
+
+function getFastMs() {
+  if(!state.fastStartTime)return{};
+  const day=getDayData();
+  const startMs=new Date(state.fastStartTime).getTime();
+  const durationMs=day.h*3600000;
+  const endMs=startMs+durationMs;
+  const now=Date.now();
+  return{
+    startMs,endMs,durationMs,
+    elapsed:Math.max(0,now-startMs),
+    remaining:Math.max(0,endMs-now),
+    pct:Math.min(100,(Math.max(0,now-startMs)/durationMs)*100),
+    isFasting:now>=startMs&&now<endMs&&!state.fastEnded,
+    windowOver:now>=endMs&&!state.fastEnded
+  };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// NOTIFICATIONS
+// ═══════════════════════════════════════════════════════════════
+function scheduleNotifs() {
+  if(!('Notification'in window)||Notification.permission!=='granted')return;
+  const day=getDayData();const lang=getLang();
+  const dayKey=`d${state.currentDay}-${state.protocol}`;
+  if(state.notifScheduled[dayKey])return;
+  state.notifScheduled[dayKey]=true;saveState();
+  if(day.s!==null&&day.h>0){
+    const target=new Date();target.setHours(day.s,0,0,0);
+    if(target<=new Date())target.setDate(target.getDate()+1);
+    const delay=target-Date.now();
+    if(delay<86400000){setTimeout(()=>{
+      new Notification('⏱️ Time to start your fast!',
+        {body:`${'Day'} ${state.currentDay}: ${day.h}h`});
+    },delay);}
+  }
+  const times=[9,12,15,19];
+  const fi=FASTING_INSIGHTS[lang]||FASTING_INSIGHTS.en;
+  const ki=KETO_INSIGHTS[lang]||KETO_INSIGHTS.en;
+  times.forEach((hour,i)=>{
+    const target=new Date();target.setHours(hour,0,0,0);
+    const delay=target-Date.now();
+    if(delay>0&&delay<86400000){setTimeout(()=>{
+      const{isFasting}=getFastMs();
+      const pool=isFasting?fi:ki;
+      new Notification('🧬',{body:pool[i%pool.length]});
+    },delay);}
+  });
+}
+
+async function requestNotifs() {
+  if(!('Notification'in window))return;
+  const perm=await Notification.requestPermission();
+  if(perm==='granted'){scheduleNotifs();}
+  renderTracker();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TRACKER ACTIONS
+// ═══════════════════════════════════════════════════════════════
+
+// Advance currentDay based on how many calendar days have elapsed since program start.
+// This means midnight automatically moves to the next protocol day regardless of
+// whether the fast was started or completed.
+function syncDayFromCalendar() {
+  if (!state.programStartDate || !state.setup) return;
+  const sch = getSchedule();
+  if (!sch || !sch.length) return;
+  const start = new Date(state.programStartDate + 'T00:00:00');
+  const today = new Date(); today.setHours(0,0,0,0);
+  const elapsed = Math.floor((today - start) / 86400000); // whole days since start
+  const baseDay = state.cycleStartDay || 1;
+  const newDay  = Math.min(baseDay + elapsed, sch.length);
+  if (newDay !== state.currentDay) {
+    state.currentDay    = newDay;
+    state.fastStartTime = null;
+    state.fastEnded     = false;
+    saveState();
+  }
+}
+
+function startFast(){state.fastStartTime=new Date().toISOString();state.fastEnded=false;saveState();renderTracker();}
+function endFast(){state.fastEnded=true;saveState();window._showCongrats=true;renderTracker();}
+function nextDay(){
+  const sch=getSchedule();
+  if(state.currentDay<sch.length){state.currentDay++;state.fastStartTime=null;state.fastEnded=false;saveState();scheduleNotifs();}
+  window._showCongrats=false;renderTracker();
+}
+function cycleInsight(i){state.insight=i;saveState();renderTracker();}
+window._showCongrats=false;
+function showCongratsModal(){window._showCongrats=true;renderTracker();}
+function hideCongratsModal(){window._showCongrats=false;renderTracker();}
+
+function confirmReset(){
+  if(confirm('Reset all progress?')){localStorage.removeItem(KEY);location.reload();}
+}
+
+function returnHome(){
+  const lang = getLang();
+  const msg = 'Stop this protocol and return to home page?';
+  if(confirm(msg)){
+    localStorage.removeItem(KEY);
+    location.reload();
+  }
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+// MACROS TABLE
+// ═══════════════════════════════════════════════════════════════
+function buildMacrosTable() {
+  const saved   = (state.macros || {})[state.currentDay] || {};
+  const carbs   = saved.carbs   || 0;
+  const protein = saved.protein || 0;
+  const fat     = saved.fat     || 0;
+  const kcal    = Math.round(carbs*4 + protein*4 + fat*9);
+
+  function pct(val, total) {
+    return total > 0 ? Math.round((val / total) * 100) + '%' : '—';
+  }
+  const totalG = carbs + protein + fat;
+
+  return `
+  <div style="margin-top:16px;border-top:1px solid #1e1a0e;padding-top:14px">
+    <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#5a4a28;margin-bottom:10px">Macros</div>
+    <table class="macros-table">
+      <thead>
+        <tr>
+          <th style="width:60px"></th>
+          <th>Logged</th>
+          <th style="text-align:center;width:50px">%</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="mt-macro-name carbs">Carbs</span></td>
+          <td style="text-align:center"><input class="mt-input" type="number" min="0" max="999" value="${carbs||''}" placeholder="—" id="mt-carbs" oninput="updateMacroRow()" /></td>
+          <td style="text-align:center;font-size:13px;color:#e8b84c" id="mt-pct-carbs">${pct(carbs, totalG)}</td>
+        </tr>
+        <tr>
+          <td><span class="mt-macro-name protein">Protein</span></td>
+          <td style="text-align:center"><input class="mt-input" type="number" min="0" max="999" value="${protein||''}" placeholder="—" id="mt-protein" oninput="updateMacroRow()" /></td>
+          <td style="text-align:center;font-size:13px;color:#70c8d0" id="mt-pct-protein">${pct(protein, totalG)}</td>
+        </tr>
+        <tr>
+          <td><span class="mt-macro-name fat">Fat</span></td>
+          <td style="text-align:center"><input class="mt-input" type="number" min="0" max="999" value="${fat||''}" placeholder="—" id="mt-fat" oninput="updateMacroRow()" /></td>
+          <td style="text-align:center;font-size:13px;color:#c870c8" id="mt-pct-fat">${pct(fat, totalG)}</td>
+        </tr>
+        <tr style="border-top:1px solid #2a2010">
+          <td><span class="mt-macro-name kcal">kcal</span></td>
+          <td class="mt-kcal-val" id="mt-kcal">${kcal || '—'}</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="mt-save-row">
+      <button class="btn btn-gold" style="padding:7px 20px;font-size:12px;max-width:100px" onclick="saveMacrosInline()" id="mt-save-btn">Save</button>
+    </div>
+  </div>`;
+}
+
+function updateMacroRow() {
+  const c = parseFloat(document.getElementById('mt-carbs')?.value)   || 0;
+  const p = parseFloat(document.getElementById('mt-protein')?.value) || 0;
+  const f = parseFloat(document.getElementById('mt-fat')?.value)     || 0;
+  const kcal  = Math.round(c*4 + p*4 + f*9);
+  const total = c + p + f;
+  function pct(val) { return total > 0 ? Math.round((val/total)*100)+'%' : '—'; }
+  const bk = document.getElementById('mt-kcal');
+  const pc = document.getElementById('mt-pct-carbs');
+  const pp = document.getElementById('mt-pct-protein');
+  const pf = document.getElementById('mt-pct-fat');
+  if (bk) bk.textContent = kcal || '—';
+  if (pc) pc.textContent = pct(c);
+  if (pp) pp.textContent = pct(p);
+  if (pf) pf.textContent = pct(f);
+}
+
+function saveMacrosInline() {
+  const c = parseFloat(document.getElementById('mt-carbs')?.value)   || 0;
+  const p = parseFloat(document.getElementById('mt-protein')?.value) || 0;
+  const f = parseFloat(document.getElementById('mt-fat')?.value)     || 0;
+  if (!state.macros) state.macros = {};
+  state.macros[state.currentDay] = { carbs:c, protein:p, fat:f };
+  saveState();
+  const btn = document.getElementById('mt-save-btn');
+  if (btn) { btn.textContent = '✓ Saved'; btn.style.background='#1a3a1a';
+    setTimeout(() => { if(btn){ btn.textContent='Save'; btn.style.background=''; } }, 1600); }
+}
+
+let tickerInterval=null;
+
+function renderTracker() {
+  syncDayFromCalendar();
+  const app=document.getElementById('tracker-app');
+  if(!app)return;
+  const lang=getLang();
+  const sch=getSchedule();
+  const total=sch.length;
+  const day=getDayData();
+  const fms=state.fastStartTime?getFastMs():{};
+  const{isFasting,windowOver,elapsed,remaining,pct}=fms;
+  const notifGranted='Notification'in window&&Notification.permission==='granted';
+  const isWater=day.special==='waterfast'||day.special==='waterfast2'||day.special==='extended'||day.special==='gutreset';
+  const isRest=day.h===0;
+  const insight=state.insight%8;
+  const fi=FASTING_INSIGHTS[lang]||FASTING_INSIGHTS.en;
+  const ki=KETO_INSIGHTS[lang]||KETO_INSIGHTS.en;
+  const insightText=(isFasting||state.fastEnded)?fi[insight]:ki[insight];
+  const phaseLabels=T[lang]?T[lang].phaseLabels:T.en.phaseLabels;
+  const phaseLabel=phaseLabels[day.phase]||day.phase||'';
+  const tl=T[lang]||T.en;
+  const dietText=day.diet[lang]||day.diet.en;
+
+  let html='';
+
+  // CONGRATS MODAL
+  if(window._showCongrats){
+    const bf=BREAK_FAST_FOODS[lang]||BREAK_FAST_FOODS.en;
+    const cb=CONGRATS_BENEFITS[lang]||CONGRATS_BENEFITS.en;
+    html+=`<div class="modal-overlay">
+    <div class="modal">
+      <div class="modal-icon">🎉</div>
+      <h2 style="color:#7ed896">${tl.congratsTitle}</h2>
+      <p class="modal-sub">${day.h} ${tl.congratsSub}</p>
+      <div class="modal-list">${cb.map(c=>`<p class="green">${c}</p>`).join('')}</div>
+      <hr/>
+      <div class="modal-list">
+        <p class="bold">${tl.breakFastTitle}</p>
+        ${bf.map(f=>`<p class="dim">${f}</p>`).join('')}
+      </div>
+      <div class="btn-row" style="margin-top:18px">
+        <button class="btn btn-outline-green" onclick="hideCongratsModal()">${tl.closeBtn}</button>
+        ${state.currentDay<total?`<button class="btn btn-gold" onclick="nextDay()">${tl.nextDay} ${state.currentDay+1} →</button>`:''}
+      </div>
+    </div></div>`;
+  }
+
+  // AD UNIT (top)
+  html+=`<div class="ad-unit">
+    <!-- AdSense: replace with real ad tag -->
+    <!-- <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXX" data-ad-slot="XXXXXXXX" data-ad-format="auto"></ins> -->
+    <span class="ad-placeholder">${tl.adPlaceholder}</span>
+  </div>`;
+
+  // HEADER
+  html+=`<div class="header">
+    <div class="header-label">${tl.langTitle||'Fasting Companion'}</div>
+    <div class="header-day">${'Day'} ${state.currentDay} <span>'of' ${total}</span></div>
+    ${phaseLabel?`<div class="header-phase">${phaseLabel}</div>`:''}
+  </div>`;
+
+  // PROGRESS DOTS
+  html+=`<div class="dots">`;
+  for(let i=0;i<total;i++){
+    const past=i<state.currentDay-1,active=i===state.currentDay-1;
+    const ph=sch[i].phase;
+    const phColor={power:'#c9a84c',manifestation:'#b07ac8',power2:'#c9a84c',nurture:'#7aaa7a',brain2:'#a090d0',brain_p1:'#a090d0',brain_p2:'#b07ad8',brain_p3:'#80b0f0',advanced:'#70d0c8',if:'#70d890'}[ph]||'#c9a84c';
+    html+=`<div class="dot" style="background:${past?phColor:active?phColor:'#1e1a10'};border:${active?`2px solid ${phColor}`:'1px solid #2a2010'};box-shadow:${active?`0 0 7px ${phColor}50`:'none'}"></div>`;
+  }
+  html+=`</div>`;
+
+  // REST DAY
+  if(isRest){
+    html+=`<div class="card card-food">
+      <div class="rest-day">
+        <div class="rest-icon">🌿</div>
+        <div class="rest-title">${tl.restTitle}</div>
+        <p class="rest-text">${tl.restText}</p>
+      </div>
+    </div>`;
+    html+=`<div class="card card-food"><div class="card-label gold">${tl.nutritionLabel}</div><div class="food-text">${dietText}</div></div>`;
+    if(state.currentDay<total){
+      html+=`<button class="btn btn-gold" style="margin-top:8px" onclick="nextDay()">${tl.nextDay} ${state.currentDay+1} →</button>`;
+    }
+    if(state.currentDay===total){
+      html+=`<button class="btn btn-ghost" style="margin-top:14px;font-size:13px;color:#d07070;border-color:#7a3535" onclick="returnHome()">🏠 ${tl.returnHome}</button>`;
+    }
+  } else {
+    // FAST CARD
+    html+=`<div class="card card-fast">
+      <div class="fast-header">
+        <div>
+          <div class="card-label gold">${tl.fastLabel}</div>
+          <div class="fast-hours">${day.h}<span>h</span></div>
+        </div>
+        <div style="text-align:right">
+          ${day.s!==null?`<div style="font-size:10px;color:#9a7a40;margin-bottom:2px">${tl.startsLabel}</div><div style="color:#c8a870;font-size:17px">${day.s}:00</div>`:''}
+          ${day.special==='gutreset'?`<div class="extended-tag">${tl.gutResetTag}</div>`:isWater?`<div class="extended-tag">${tl.extendedTag}</div>`:''}
+        </div>
+      </div>`;
+
+    // PROGRESS BAR
+    if(state.fastStartTime){
+      html+=`<div style="margin-bottom:16px">
+        <div class="progress-track"><div class="progress-fill ${(windowOver||state.fastEnded)?'done':'active'}" style="width:${pct||0}%"></div></div>
+        <div class="progress-labels">
+          <div>${tl.elapsed}: <span>${fmtElapsed(elapsed||0)}</span></div>
+          ${(windowOver||state.fastEnded)?`<div class="done-label">${tl.windowComplete}</div>`:`<div>${tl.remaining}: <span>${fmtTimer(remaining||0)}</span></div>`}
+        </div>
+      </div>`;
+    }
+
+    // TIMER
+    if(isFasting){
+      html+=`<div class="timer-box">
+        <div class="timer-title">${tl.fasting}</div>
+        <div class="timer-val" id="timer-val">${fmtTimer(elapsed||0)}</div>
+        <div class="timer-sub">elapsed</div>
+      </div>`;
+    }
+
+    // ACTION BUTTONS
+    if(!state.fastStartTime&&!state.fastEnded){
+      html+=`<button class="btn btn-purple" onclick="startFast()">${tl.startFast}</button>`;
+    } else if(windowOver){
+      html+=`<button class="btn btn-green" onclick="endFast()">${tl.registerEnd}</button>`;
+    } else if(state.fastEnded){
+      html+=`<div class="btn-row">
+        <button class="btn btn-outline-green" onclick="showCongratsModal()">${tl.viewBenefits}</button>
+        ${state.currentDay<total?`<button class="btn btn-gold" onclick="nextDay()">${tl.nextDay} ${state.currentDay+1} →</button>`:`<div style="flex:1;text-align:center;color:#e8c97e;font-size:13px;display:flex;align-items:center;justify-content:center">${tl.journeyComplete}</div>`}
+      </div>`;
+    }
+    // Last day — show return home button
+    if(state.currentDay===total){
+      html+=`<button class="btn btn-ghost" style="margin-top:14px;font-size:13px;color:#d07070;border-color:#7a3535" onclick="returnHome()">🏠 ${tl.returnHome}</button>`;
+    }
+    html+=`</div>`; // end fast card
+
+    // FOOD CARD with inline macros table
+    html+=`<div class="card card-food">
+      <div class="card-label gold">${tl.nutritionLabel}</div>
+      <div class="food-text">${dietText}</div>
+      ${buildMacrosTable()}
+    </div>`;
+
+    // INSIGHT CARD
+    html+=`<div class="card card-insight">
+      <div class="card-label green">${isFasting?tl.bodyLabel:tl.ketoLabel}</div>
+      <div class="insight-text">${insightText}</div>
+      <div class="insight-dots">
+        ${[0,1,2,3,4,5,6,7].map(i=>`<div class="insight-dot" style="background:${insight===i?'#7aaa7a':'#1a2a1a'}" onclick="cycleInsight(${i})"></div>`).join('')}
+      </div>
+    </div>`;
+
+    // REMIND CARD
+    if(day.s!==null){
+      html+=`<div class="card card-remind">
+        <div class="remind-row">
+          <div><div class="card-label purple">${tl.fastBeginsLabel}</div><div class="remind-time">${day.s}:00</div></div>
+          <div>${notifGranted?`<div class="remind-set">${tl.reminderSet}</div>`:`<button class="btn-notif" onclick="requestNotifs()">${tl.enableReminder}</button>`}</div>
+        </div>
+      </div>`;
+    }
+  }
+
+  // AD UNIT (bottom)
+  html+=`<div class="ad-unit" style="margin-top:8px">
+    <!-- AdSense: replace with real ad tag -->
+    <span class="ad-placeholder">${tl.adPlaceholder}</span>
+  </div>`;
+
+  html+=`<div class="footer">${total-state.currentDay} ${tl.daysRemaining}</div>`;
+
+  // Show return home button at bottom when fast hasn't started yet, OR on last day
+  if(!state.fastStartTime&&!state.fastEnded || state.currentDay===total){
+    html+=`<button class="btn btn-ghost" style="margin-top:16px;font-size:13px;color:#d07070;border-color:#7a3535" onclick="returnHome()">🏠 ${tl.returnHome}</button>`;
+  }
+
+  app.innerHTML=html;
+
+  if(isFasting)startTicker();
+  else if(windowOver)startWindowOverTicker();
+  else clearInterval(tickerInterval);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LIVE TICKER
+// ═══════════════════════════════════════════════════════════════
+function startTicker(){
+  clearInterval(tickerInterval);
+  tickerInterval=setInterval(()=>{
+    const{isFasting,windowOver,elapsed}=getFastMs();
+    const el=document.getElementById('timer-val');
+    if(el)el.textContent=fmtTimer(elapsed);
+    if(windowOver||!isFasting){clearInterval(tickerInterval);renderTracker();}
+  },1000);
+}
+function startWindowOverTicker(){
+  clearInterval(tickerInterval);
+  tickerInterval=setInterval(()=>{const{windowOver}=getFastMs();if(!windowOver)renderTracker();},5000);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',()=>{
+  state.lang = 'en';
+  state.gender = 'female';
+
+  renderProtocolList();
+
+  if(saved&&saved.setup&&saved.protocol){
+    showScreen('tracker');
+    renderTracker();
+    if('Notification'in window&&Notification.permission==='granted')scheduleNotifs();
+  } else if(saved&&saved.protocol){
+    if((saved.protocol==='reset30'||saved.protocol==='advanced'||saved.protocol==='brain2')&&!saved.schedule) navTo('cycle');
+    else if(saved.schedule&&!saved.setup){ renderSchedulePreview(); navTo('preview'); }
+    else startProgram();
+  } else {
+    showScreen('protocol');
+  }
+
+  document.addEventListener('visibilitychange',()=>{
+    if(!document.hidden){clearInterval(tickerInterval);renderTracker();}
+  });
+
+  setCyclePreset(28);
+  refreshStartDayDisplay();
+  refreshStartDayPresets();
+  renderCycleCalendar();
+});
+
+// ═══════════════════════════════════════════════════════════════
+// TAB NAVIGATION
+// ═══════════════════════════════════════════════════════════════
+function switchTab(tab) {
+  ['protocols','cycle-tracker'].forEach(t => {
+    const panel = document.getElementById('tab-'+t);
+    const btn   = document.getElementById('nav-'+t);
+    if (panel) panel.classList.toggle('active', t === tab);
+    if (btn)   btn.classList.toggle('active',   t === tab);
+  });
+  if (tab === 'cycle-tracker') renderCycleCalendar();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CYCLE TRACKER CALENDAR
+// ═══════════════════════════════════════════════════════════════
+function ctDateKey(y, m, d) {
+  return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+}
+
+// Returns a map of dateKey → phase class, plus an array of phase ranges for the card
+function ctGetPhases(periodStartKey, cycleLength) {
+  const [sy, sm, sd] = periodStartKey.split('-').map(Number);
+  const start = new Date(sy, sm-1, sd);
+
+  // Phase boundaries (days offset from day 1, inclusive start exclusive end)
+  // Power 1: day 1 → ~32%,  Manifestation: ~32% → ~50%
+  // Power 2: ~50% → ~71%,   Nurture: ~71% → 100%
+  const p1End = Math.round(cycleLength * 0.33);
+  const maEnd = Math.round(cycleLength * 0.46); // 33% + 13%
+  const p2End = Math.round(cycleLength * 0.56); // 33% + 13% + 10%
+  const clEnd = cycleLength;                     // remaining 43% = Nurture
+
+  const phases = [
+    { key:'ph-power1',       label:'Power Phase 1',          emoji:'⚡', color:'#ffd6e8', textColor:'#5a2840', from:0,      to:p1End-1    },
+    { key:'ph-manifestation',label:'Manifestation',           emoji:'✨', color:'#ffeea0', textColor:'#5a3800', from:p1End,  to:maEnd-1    },
+    { key:'ph-power2',       label:'Power Phase 2',          emoji:'🔥', color:'#dfc8f8', textColor:'#38206a', from:maEnd,  to:p2End-1    },
+    { key:'ph-nurture',      label:'Nurture',                 emoji:'🌿', color:'#c8edda', textColor:'#1a4a30', from:p2End,  to:clEnd-1    },
+    { key:'ph-next-period',  label:'Next Period begins',      emoji:'🔴', color:'#ffc8d8', textColor:'#8a1a38', from:clEnd,  to:clEnd      },
+  ];
+
+  const fmt = d => d.toLocaleDateString('en', { month:'short', day:'numeric' });
+
+  const dateMap = {};
+  const phaseRanges = phases.map(ph => {
+    const fromDate = new Date(start); fromDate.setDate(fromDate.getDate() + ph.from);
+    const toDate   = new Date(start); toDate.setDate(toDate.getDate() + ph.to);
+    // Fill dateMap
+    for (let i = ph.from; i <= ph.to; i++) {
+      const dt = new Date(start); dt.setDate(dt.getDate() + i);
+      dateMap[ctDateKey(dt.getFullYear(), dt.getMonth(), dt.getDate())] = ph.key;
+    }
+    const dateRange = ph.from === ph.to ? fmt(fromDate) : `${fmt(fromDate)} – ${fmt(toDate)}`;
+    return { ...ph, fromDate, toDate, dateRange };
+  });
+
+  return { dateMap, phaseRanges };
+}
+
+function ctTogglePeriod(key) {
+  if (!state.cycleTracker) state.cycleTracker = {};
+  if (state.cycleTracker.periodStart === key) {
+    state.cycleTracker.periodStart = null;
+  } else {
+    state.cycleTracker.periodStart = key;
+  }
+  saveState();
+  renderCycleCalendar();
+}
+
+function renderCycleCalendar() {
+  const wrap = document.getElementById('ct-wrap');
+  if (!wrap) return;
+
+  const now         = new Date();
+  now.setHours(0,0,0,0);
+  const todayKey    = ctDateKey(now.getFullYear(), now.getMonth(), now.getDate());
+  const cutoff      = new Date(now); cutoff.setDate(cutoff.getDate() - 30);
+  const periodStart = (state.cycleTracker || {}).periodStart || null;
+  const cycleLength = (state.cycleTracker || {}).cycleLength || 28;
+
+  // Build phase map if period start is set
+  let phaseData = null;
+  if (periodStart) phaseData = ctGetPhases(periodStart, cycleLength);
+  const dateMap = phaseData ? phaseData.dateMap : {};
+
+  const WEEKDAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const MONTHS   = ['January','February','March','April','May','June',
+                    'July','August','September','October','November','December'];
+
+  const months = [-1, 0, 1].map(offset => {
+    const d = new Date(now.getFullYear(), now.getMonth() + offset, 1);
+    return { year: d.getFullYear(), month: d.getMonth() };
+  });
+
+  function buildMonth({ year, month }) {
+    const isCurrent    = year === now.getFullYear() && month === now.getMonth();
+    const firstWeekday = new Date(year, month, 1).getDay();
+    const daysInMonth  = new Date(year, month + 1, 0).getDate();
+    const label = `${MONTHS[month]} ${year}`;
+
+    const weekdayHdr = `<div class="ct-weekdays">
+      ${WEEKDAYS.map(d => `<div class="ct-weekday">${d}</div>`).join('')}
+    </div>`;
+
+    let cells = '';
+    for (let i = 0; i < firstWeekday; i++) {
+      cells += `<div class="ct-day empty"></div>`;
+    }
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const key      = ctDateKey(year, month, d);
+      const cellDate = new Date(year, month, d);
+      const isToday       = key === todayKey;
+      const isPeriodStart = key === periodStart;
+      const isFuture      = cellDate > now;
+      const isInRange     = cellDate >= cutoff && cellDate <= now;
+      const phaseClass    = dateMap[key] || '';
+
+      let cls = 'ct-day';
+      if (phaseClass) cls += ' ' + phaseClass;
+      if (isPeriodStart)   cls += ' period-start';
+      else if (isToday && !phaseClass) cls += ' today';
+      else if (isToday)    cls += ' today';
+      if (isFuture && !phaseClass)  cls += ' future';
+      else if (!isInRange && !isToday && !isPeriodStart && !phaseClass) cls += ' out-of-range';
+      if (isInRange || isToday) cls += ' clickable';
+
+      const onclick = (isInRange || isToday) ? `onclick="ctTogglePeriod('${key}')"` : '';
+      const title   = isFuture && !phaseClass ? 'Future dates not allowed'
+                    : isInRange || isToday ? 'Tap to mark period start'
+                    : '';
+
+      cells += `<div class="${cls}" ${onclick} title="${title}">${d}</div>`;
+    }
+
+    return `
+      <div class="ct-month-block">
+        <div class="ct-month-heading${isCurrent ? ' current-month-label' : ''}">${label}</div>
+        ${weekdayHdr}
+        <div class="ct-grid">${cells}</div>
+      </div>`;
+  }
+
+  // Period start info card
+  let infoHtml = '';
+  if (periodStart) {
+    const [py, pm, pd] = periodStart.split('-').map(Number);
+    const formatted = new Date(py, pm-1, pd).toLocaleDateString('en', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+    infoHtml = `<div class="ct-selected-info">
+      <div class="ct-selected-label">Period Start
+        <button class="ct-clear-period" onclick="ctTogglePeriod('${periodStart}')">Clear</button>
+      </div>
+      <div class="ct-selected-date">🔴 ${formatted}</div>
+    </div>`;
+  }
+
+  // Phase prediction card
+  let phasesHtml = '';
+  if (phaseData) {
+    const rows = phaseData.phaseRanges.map(ph => `
+      <div class="ct-phase-row" style="background:${ph.color}">
+        <div class="ct-phase-name" style="color:${ph.textColor}">${ph.emoji} ${ph.label}</div>
+        <div class="ct-phase-dates" style="color:${ph.textColor}">${ph.dateRange}</div>
+      </div>`).join('');
+    phasesHtml = `<div class="ct-phases-card">
+      <div class="ct-phases-title">Cycle Prediction</div>
+      ${rows}
+    </div>`;
+  }
+
+  wrap.innerHTML = `
+    <div class="ct-page-title">Track Your Cycle</div>
+    <div class="ct-page-sub">Tap to mark the start of your period</div>
+    ${infoHtml}
+
+    <div class="ct-selected-info" style="margin-bottom:14px">
+      <div class="ct-selected-label">Typical Cycle Length</div>
+      <div class="ct-input-row" style="display:flex;align-items:center;justify-content:space-between;margin-top:4px">
+        <div style="font-size:14px;color:#5a2840">How many days is your cycle?</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <button class="ct-step-btn" onclick="ctAdjustCycleLength(-1)">−</button>
+          <div style="font-size:26px;color:#d4547a;min-width:36px;text-align:center;font-family:'Cormorant Garamond',serif" id="ct-cycle-length-val">${cycleLength}</div>
+          <button class="ct-step-btn" onclick="ctAdjustCycleLength(1)">+</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#b07898;margin-top:6px">days &nbsp;·&nbsp; typical range is 21–40 days</div>
+    </div>
+
+    ${phasesHtml}
+
+    <div class="ct-hint">You can select today or any day within the last 30 days</div>
+    ${months.map((m, i) => buildMonth(m) + (i < 2 ? '<div class="ct-month-sep"></div>' : '')).join('')}
+  `;
+}
+
+function ctAdjustCycleLength(delta) {
+  if (!state.cycleTracker) state.cycleTracker = {};
+  const current = state.cycleTracker.cycleLength || 28;
+  state.cycleTracker.cycleLength = Math.min(40, Math.max(21, current + delta));
+  saveState();
+  renderCycleCalendar();
+}
+</script>
+</body>
+</html>
